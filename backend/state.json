@@ -1,0 +1,18 @@
+{
+  "sessions": [
+    "w"
+  ],
+  "drivers": {
+    "w": [
+      {
+        "name": "g",
+        "car": "Car A"
+      },
+      {
+        "name": "s",
+        "car": "Car B"
+      }
+    ]
+  },
+  "raceState": {}
+}

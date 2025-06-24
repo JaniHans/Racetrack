@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
 import { EVENTS } from '../shared/events.js';
 import { initSocketHandlers } from './socketHandlers.js';
+import fs from 'fs';
 
 // Define __dirname for ES modules
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -26,6 +27,36 @@ let drivers = {};
 
 // Predefined list of cars
 const cars = ['Car A', 'Car B', 'Car C', 'Car D', 'Car E', 'Car F', 'Car G', 'Car H'];
+
+// File to persist state
+const STATE_FILE = path.join(__dirname, 'state.json');
+
+// Load initial state from file if it exists
+function loadState() {
+  if (fs.existsSync(STATE_FILE)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(STATE_FILE, 'utf-8'));
+      sessions = data.sessions || [];
+      drivers = data.drivers || {};
+      // If you have raceState or other state, load it here as well
+      global.raceState = data.raceState || {};
+      console.log('State loaded from disk.');
+    } catch (e) {
+      console.error('Failed to load state:', e);
+    }
+  }
+}
+loadState();
+
+// Save state to file
+function saveState() {
+  const data = {
+    sessions,
+    drivers,
+    raceState: global.raceState || {},
+  };
+  fs.writeFileSync(STATE_FILE, JSON.stringify(data, null, 2));
+}
 
 // Serve individual role UIs (e.g., /receptionist.html, /safety.html)
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -73,6 +104,7 @@ io.on('connection', (socket) => {
       sessions.push(newSessionName);
       drivers[newSessionName] = []; // Initialize an empty driver list for the session
       io.emit('update:data', { sessions, drivers });
+      saveState();
       console.log(`Session added: ${newSessionName}`);
     } else {
       console.log(`Session already exists: ${newSessionName}`);
@@ -107,6 +139,7 @@ io.on('connection', (socket) => {
 
       drivers[session].push({ name, car: assignedCar });
       io.emit('update:data', { sessions, drivers, cars });
+      saveState();
       console.log(`Driver added: ${name} to session: ${session}, assigned car: ${assignedCar}`);
     } else {
       console.log(`Session not found: ${session}`);
@@ -121,6 +154,7 @@ io.on('connection', (socket) => {
       sessions = sessions.filter((s) => s !== session);
       delete drivers[session];
       io.emit('update:data', { sessions, drivers });
+      saveState();
       console.log(`Session removed: ${session}`);
     } else {
       console.log(`Session not found: ${session}`);
@@ -136,6 +170,7 @@ io.on('connection', (socket) => {
     if (sessions.includes(session) && drivers[session]?.find((driver) => driver.name === safeName)) {
       drivers[session] = drivers[session].filter((driver) => driver.name !== safeName);
       io.emit('update:data', { sessions, drivers });
+      saveState();
       console.log(`Driver removed: ${safeName} from session: ${session}`);
     } else {
       console.log(`Driver not found or session not found: ${safeName}`);
@@ -158,6 +193,7 @@ io.on('connection', (socket) => {
         driver.name === safeOldName ? { ...driver, name: safeNewName } : driver
       );
       io.emit('update:data', { sessions, drivers });
+      saveState();
       console.log(`Driver edited: ${safeOldName} to ${safeNewName} in session: ${session}`);
     } else {
       console.log(`Driver edit failed: ${safeOldName} to ${safeNewName}`);
@@ -185,6 +221,7 @@ io.on('connection', (socket) => {
     }
     driver.car = car;
     io.emit('update:data', { sessions, drivers, cars });
+    saveState();
     console.log(`Driver car updated: ${name} in session: ${session}, new car: ${car}`);
   });
 
