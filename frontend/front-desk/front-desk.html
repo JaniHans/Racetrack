@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Receptionist Panel</title>
+  <link rel="stylesheet" href="front-desk.css">
+</head>
+<body>
+  <h1>Receptionist Control Panel</h1>
+
+  <div>
+    <h2>Upcoming Race Sessions</h2>
+    <input type="text" id="newSessionName" placeholder="New Session Name" />
+    <button class="add" onclick="addRaceSession()">Add Session</button>
+  </div>
+
+  <div>
+    <h2>Manage Race Drivers</h2>
+    <form id="driverForm" onsubmit="event.preventDefault(); addDriver();">
+      <input type="text" id="driverName" placeholder="Driver Name" required />
+      <select id="sessionSelect"></select>
+      <button class="add" type="submit">Add Driver</button>
+    </form>
+  </div>
+
+  <div id="sessionTables"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="front-desk.js"></script>
+</body>
+</html>

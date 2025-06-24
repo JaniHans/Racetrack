@@ -1,0 +1,38 @@
+body {
+  font-family: sans-serif;
+  background-color: #121212;
+  color: #fff;
+  padding: 2rem;
+}
+button {
+  padding: 1rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+}
+input, select {
+  padding: 0.5rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.add { background-color: #4caf50; color: white; }
+.remove { background-color: #f44336; color: white; }
+.edit { background-color: #2196f3; color: white; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+th {
+  background-color: #333;
+  color: #fff;
+}
