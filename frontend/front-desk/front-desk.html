@@ -8,6 +8,7 @@
 </head>
 <body>
   <h1>Receptionist Control Panel</h1>
+  <button id="logoutBtn" class="remove" style="float:right;">Logout</button>
 
   <div>
     <h2>Upcoming Race Sessions</h2>
@@ -20,11 +21,23 @@
     <form id="driverForm" onsubmit="event.preventDefault(); addDriver();">
       <input type="text" id="driverName" placeholder="Driver Name" required />
       <select id="sessionSelect"></select>
+      <select id="carSelect">
+        <option value="">Auto-assign car</option>
+      </select>
       <button class="add" type="submit">Add Driver</button>
     </form>
   </div>
 
   <div id="sessionTables"></div>
+
+  <div id="keyModal">
+    <div>
+      <h2>Enter Receptionist Key</h2>
+      <input type="password" id="receptionistKeyInput">
+      <button id="submitKeyBtn" class="add">Enter</button>
+      <div id="keyError">Invalid key. Try again.</div>
+    </div>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="front-desk.js"></script>

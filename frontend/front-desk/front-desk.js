@@ -2,12 +2,17 @@ const socket = io();
 
 let raceSessions = [];
 let drivers = {};
+let cars = [];
+
+// Add at the top
+let receptionistKey = null;
 
 socket.emit('fetch:data');
 
 socket.on('update:data', (data) => {
   raceSessions = data.sessions;
   drivers = data.drivers;
+  cars = data.cars || cars; // fallback if not sent
   updateUI();
 });
 
@@ -53,19 +58,24 @@ function updateUI() {
     const table = document.createElement('table');
     table.id = `table-${session}`;
     const headerRow = document.createElement('tr');
-    headerRow.innerHTML = `<th>Driver Name</th><th style="width: 150px; text-align: right;">Actions</th>`;
+    headerRow.innerHTML = `<th>Driver Name</th><th>Assigned Car</th><th style="width: 220px; text-align: right;">Actions</th>`;
     table.appendChild(headerRow);
 
     if (drivers[session]) {
       drivers[session].forEach((driver) => {
+        let editing = false; // Track if this row is in edit mode
+
         const row = document.createElement('tr');
 
         const driverCell = document.createElement('td');
         driverCell.textContent = driver.name;
 
+        const carCell = document.createElement('td');
+        carCell.textContent = driver.car || '';
+
         const actionsCell = document.createElement('td');
         actionsCell.style.textAlign = 'right';
-        actionsCell.style.width = '150px';
+        actionsCell.style.width = '220px';
 
         const actionsContainer = document.createElement('div');
         actionsContainer.style.display = 'flex';
@@ -79,7 +89,16 @@ function updateUI() {
         const editDriverButton = document.createElement('button');
         editDriverButton.textContent = 'Edit Driver';
         editDriverButton.className = 'edit';
+
+        const editCarButton = document.createElement('button');
+        editCarButton.textContent = 'Edit Car';
+        editCarButton.className = 'edit';
+
+        // --- Edit Driver Logic ---
         editDriverButton.onclick = () => {
+          // Hide Edit Car button
+          editCarButton.style.display = 'none';
+
           // Inline editing with Save/Cancel
           const input = document.createElement('input');
           input.type = 'text';
@@ -112,19 +131,85 @@ function updateUI() {
             if (newDriverName && newDriverName !== driver.name) {
               editDriver(session, driver.name, newDriverName);
             }
+            // Restore buttons
+            editDriverButton.textContent = 'Edit Driver';
+            editDriverButton.className = 'edit';
+            editCarButton.style.display = '';
+            cancelBtn.remove();
             updateUI();
           };
 
           cancelBtn.onclick = () => {
+            // Restore buttons
+            editDriverButton.textContent = 'Edit Driver';
+            editDriverButton.className = 'edit';
+            editCarButton.style.display = '';
+            cancelBtn.remove();
+            updateUI();
+          };
+        };
+
+        // --- Edit Car Logic ---
+        editCarButton.onclick = () => {
+          // Hide Edit Driver button
+          editDriverButton.style.display = 'none';
+
+          // Create a dropdown for car selection
+          const carSelect = document.createElement('select');
+          cars.forEach(car => {
+            const option = document.createElement('option');
+            option.value = car;
+            option.textContent = car;
+            if (car === driver.car) option.selected = true;
+            carSelect.appendChild(option);
+          });
+
+          editCarButton.textContent = 'Save';
+          editCarButton.className = 'add';
+
+          let cancelCarBtn = actionsContainer.querySelector('.cancel-edit-car');
+          if (!cancelCarBtn) {
+            cancelCarBtn = document.createElement('button');
+            cancelCarBtn.textContent = 'Cancel';
+            cancelCarBtn.className = 'remove cancel-edit-car';
+            cancelCarBtn.style.marginLeft = '0.5rem';
+            actionsContainer.appendChild(cancelCarBtn);
+          }
+
+          carCell.innerHTML = '';
+          carCell.appendChild(carSelect);
+          carSelect.focus();
+
+          editCarButton.onclick = () => {
+            const newCar = carSelect.value;
+            if (newCar && newCar !== driver.car) {
+              editCar(session, driver.name, newCar);
+            }
+            // Restore buttons
+            editCarButton.textContent = 'Edit Car';
+            editCarButton.className = 'edit';
+            editDriverButton.style.display = '';
+            cancelCarBtn.remove();
+            updateUI();
+          };
+
+          cancelCarBtn.onclick = () => {
+            // Restore buttons
+            editCarButton.textContent = 'Edit Car';
+            editCarButton.className = 'edit';
+            editDriverButton.style.display = '';
+            cancelCarBtn.remove();
             updateUI();
           };
         };
 
         actionsContainer.appendChild(removeDriverButton);
         actionsContainer.appendChild(editDriverButton);
+        actionsContainer.appendChild(editCarButton);
         actionsCell.appendChild(actionsContainer);
 
         row.appendChild(driverCell);
+        row.appendChild(carCell);
         row.appendChild(actionsCell);
 
         table.appendChild(row);
@@ -134,12 +219,24 @@ function updateUI() {
     sessionContainer.appendChild(table);
     sessionTables.appendChild(sessionContainer);
   });
+
+  // Populate car dropdown
+  const carSelect = document.getElementById('carSelect');
+  if (carSelect) {
+    carSelect.innerHTML = '<option value="">Auto-assign car</option>';
+    cars.forEach(car => {
+      const option = document.createElement('option');
+      option.value = car;
+      option.textContent = car;
+      carSelect.appendChild(option);
+    });
+  }
 }
 
 function addRaceSession() {
   const newSessionName = document.getElementById('newSessionName').value.trim();
   if (newSessionName && !raceSessions.includes(newSessionName)) {
-    socket.emit('session:add', newSessionName);
+    socket.emit('session:add', { newSessionName, key: receptionistKey });
     document.getElementById('newSessionName').value = '';
   } else {
     alert('Session name must be unique.');
@@ -148,7 +245,7 @@ function addRaceSession() {
 
 function removeRaceSession(session) {
   if (session) {
-    socket.emit('session:remove', session);
+    socket.emit('session:remove', { session, key: receptionistKey });
   }
 }
 
@@ -156,10 +253,12 @@ function addDriver() {
   let driverName = document.getElementById('driverName').value;
   driverName = typeof driverName === 'string' ? driverName.trim() : String(driverName).trim();
   const selectedSession = document.getElementById('sessionSelect').value;
+  const selectedCar = document.getElementById('carSelect').value;
 
   if (driverName && selectedSession) {
-    socket.emit('driver:add', { session: selectedSession, name: driverName });
+    socket.emit('driver:add', { session: selectedSession, name: driverName, car: selectedCar || null, key: receptionistKey });
     document.getElementById('driverName').value = '';
+    document.getElementById('carSelect').value = '';
   } else {
     alert('Driver name and session must be selected.');
   }
@@ -167,15 +266,69 @@ function addDriver() {
 
 function removeDriver(session, driverName) {
   if (session && driverName) {
-    socket.emit('driver:remove', { session, name: driverName });
+    socket.emit('driver:remove', { session, name: driverName, key: receptionistKey });
   }
 }
 
 function editDriver(session, oldName, newName) {
-  socket.emit('driver:edit', { session, oldName, newName });
+  socket.emit('driver:edit', { session, oldName, newName, key: receptionistKey });
+}
+
+function editCar(session, driverName, newCar) {
+  socket.emit('driver:editCar', { session, name: driverName, car: newCar, key: receptionistKey });
 }
 
 // Handle driver limit error
 socket.on('error:driverLimit', ({ session, message }) => {
   alert(`Driver limit reached for session "${session}": ${message}`);
 });
+
+// Handle driver exists error
+socket.on('error:driverExists', ({ session, message }) => {
+  alert(`Driver already exists in session "${session}": ${message}`);
+});
+
+// Show modal and handle key entry
+window.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('keyModal');
+  const input = document.getElementById('receptionistKeyInput');
+  const btn = document.getElementById('submitKeyBtn');
+  const error = document.getElementById('keyError');
+
+  function tryKey() {
+    const key = input.value.trim();
+    socket.emit('auth:receptionist', { key });
+  }
+
+  btn.onclick = tryKey;
+  input.onkeydown = (e) => { if (e.key === 'Enter') tryKey(); };
+
+  socket.on('auth:receptionist:result', (ok) => {
+    if (ok) {
+      receptionistKey = input.value.trim();
+      modal.style.display = 'none';
+      error.style.display = 'none'; // Hide error on success
+    } else {
+      error.style.display = 'block'; // <-- This will show the error!
+      input.value = '';
+    }
+  });
+
+  // Add logout button handler
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.onclick = logoutReceptionist;
+  }
+});
+
+// Add this function to show the key modal and clear the key
+function logoutReceptionist() {
+  receptionistKey = null;
+  // Show the modal again
+  const modal = document.getElementById('keyModal');
+  const input = document.getElementById('receptionistKeyInput');
+  const error = document.getElementById('keyError');
+  modal.style.display = '';
+  error.style.display = 'none';
+  input.value = '';
+}

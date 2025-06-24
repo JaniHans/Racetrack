@@ -1,160 +1,24 @@
-<<<<<<< HEAD
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { config } from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { config } from 'dotenv';
 import { EVENTS } from '../shared/events.js';
 import { initSocketHandlers } from './socketHandlers.js';
 
-config();
-
-// Define __dirname for ES module
+// Define __dirname for ES modules
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Now load .env from the backend folder
+config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
 const PORT = process.env.PORT || 3000;
-
-// Data storage for sessions and drivers
-let sessions = [];
-let drivers = {};
-
-// Predefined list of cars
-const cars = ['Car A', 'Car B', 'Car C', 'Car D', 'Car E', 'Car F', 'Car G', 'Car H'];
-
-// Serve all files in the 'frontend' folder
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Serve the receptionist HTML file
-app.get('/front-desk', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/front-desk/front-desk.html'));
-});
-
-// Serve the Next Race page at /next-race
-app.get('/next-race', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/public/next-race/next-race.html'));
-});
-
-// Simple API for health check or race info
-app.get('/api/status', (req, res) => {
-  res.json({ status: 'ok', raceActive: global.raceState?.active || false });
-});
-
-// Socket.IO
-io.on('connection', (socket) => {
-  console.log('Client connected');
-
-  // Send initial data to the client
-  socket.emit('update:data', { sessions, drivers });
-
-  // Handle adding a new session
-  socket.on('session:add', (newSessionName) => {
-    if (!sessions.includes(newSessionName)) {
-      sessions.push(newSessionName);
-      drivers[newSessionName] = []; // Initialize an empty driver list for the session
-      io.emit('update:data', { sessions, drivers });
-      console.log(`Session added: ${newSessionName}`);
-    } else {
-      console.log(`Session already exists: ${newSessionName}`);
-    }
-  });
-
-  // Handle adding a new driver
-  socket.on('driver:add', ({ session, name }) => {
-    const safeName = typeof name === 'string' ? name.trim() : String(name).trim();
-
-    if (sessions.includes(session)) {
-      if (drivers[session].length >= 8) {
-        console.log(`Cannot add driver: ${safeName}. Session ${session} already has 8 drivers.`);
-        socket.emit('error:driverLimit', { session, message: 'This session already has 8 drivers.' });
-      } else if (!drivers[session].find((driver) => driver.name === safeName)) {
-        const assignedCar = cars[drivers[session].length];
-        drivers[session].push({ name: safeName, car: assignedCar });
-        io.emit('update:data', { sessions, drivers });
-        console.log(`Driver added: ${safeName} to session: ${session}, assigned car: ${assignedCar}`);
-      } else {
-        console.log(`Driver already exists: ${safeName} in session: ${session}`);
-      }
-    } else {
-      console.log(`Session not found: ${session}`);
-    }
-  });
-
-  // Handle removing a session
-  socket.on('session:remove', (sessionName) => {
-    if (sessions.includes(sessionName)) {
-      sessions = sessions.filter((session) => session !== sessionName);
-      delete drivers[sessionName];
-      io.emit('update:data', { sessions, drivers });
-      console.log(`Session removed: ${sessionName}`);
-    } else {
-      console.log(`Session not found: ${sessionName}`);
-    }
-  });
-
-  // Handle removing a driver
-  socket.on('driver:remove', ({ session, name }) => {
-    const safeName = typeof name === 'string' ? name.trim() : String(name).trim();
-
-    if (sessions.includes(session) && drivers[session]?.find((driver) => driver.name === safeName)) {
-      drivers[session] = drivers[session].filter((driver) => driver.name !== safeName);
-      io.emit('update:data', { sessions, drivers });
-      console.log(`Driver removed: ${safeName} from session: ${session}`);
-    } else {
-      console.log(`Driver not found or session not found: ${safeName}`);
-    }
-  });
-
-  // Handle editing a driver
-  socket.on('driver:edit', ({ session, oldName, newName }) => {
-    const safeOldName = typeof oldName === 'string' ? oldName.trim() : String(oldName).trim();
-    const safeNewName = typeof newName === 'string' ? newName.trim() : String(newName).trim();
-
-    if (
-      sessions.includes(session) &&
-      drivers[session]?.find((driver) => driver.name === safeOldName) &&
-      !drivers[session]?.find((driver) => driver.name === safeNewName)
-    ) {
-      drivers[session] = drivers[session].map((driver) =>
-        driver.name === safeOldName ? { ...driver, name: safeNewName } : driver
-      );
-      io.emit('update:data', { sessions, drivers });
-      console.log(`Driver edited: ${safeOldName} to ${safeNewName} in session: ${session}`);
-    } else {
-      console.log(`Driver edit failed: ${safeOldName} to ${safeNewName}`);
-    }
-  });
-});
-
-// Start
-httpServer.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}/receptionist.html`);
-  console.log(`Server running on http://localhost:${PORT}/public/nextrace.html`);
-});
-=======
-import express from 'express';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import { config } from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { EVENTS } from '../shared/events.js';
-import { initSocketHandlers } from './socketHandlers.js';
-
-config();
-
-// Define __dirname for ES module
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer);
-
-const PORT = process.env.PORT || 3000;
+const RECEPTIONIST_KEY = process.env.KEY_RECEPTIONIST;
 
 // Data storage for sessions and drivers
 let sessions = [];
@@ -174,6 +38,16 @@ app.get('/api/status', (req, res) => {
   res.json({ status: 'ok', raceActive: global.raceState?.active || false });
 });
 
+// Serve the Front Desk page at /front-desk
+app.get('/front-desk', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/front-desk/front-desk.html'));
+});
+
+// Serve the Next Race page at /next-race
+app.get('/next-race', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/next-race/next-race.html'));
+});
+
 // Socket.IO
 io.on('connection', (socket) => {
   console.log('Client connected');
@@ -181,8 +55,20 @@ io.on('connection', (socket) => {
   // Send initial data to the client
   socket.emit('update:data', { sessions, drivers });
 
+  // Helper function to check receptionist key
+  function checkReceptionistKey(key) {
+    return key && key === RECEPTIONIST_KEY;
+  }
+
+  // Handle receptionist authentication
+  socket.on('auth:receptionist', ({ key }) => {
+    socket.emit('auth:receptionist:result', checkReceptionistKey(key));
+  });
+
   // Handle adding a new session
-  socket.on('session:add', (newSessionName) => {
+  socket.on('session:add', ({ newSessionName, key }) => {
+    if (!checkReceptionistKey(key)) return;
+
     if (!sessions.includes(newSessionName)) {
       sessions.push(newSessionName);
       drivers[newSessionName] = []; // Initialize an empty driver list for the session
@@ -194,40 +80,57 @@ io.on('connection', (socket) => {
   });
 
   // Handle adding a new driver
-  socket.on('driver:add', ({ session, name }) => {
-    const safeName = typeof name === 'string' ? name.trim() : String(name).trim();
+  socket.on('driver:add', ({ session, name, car, key }) => {
+    if (!checkReceptionistKey(key)) return;
 
     if (sessions.includes(session)) {
-      if (drivers[session].length >= 8) {
-        console.log(`Cannot add driver: ${safeName}. Session ${session} already has 8 drivers.`);
-        socket.emit('error:driverLimit', { session, message: 'This session already has 8 drivers.' });
-      } else if (!drivers[session].find((driver) => driver.name === safeName)) {
-        const assignedCar = cars[drivers[session].length];
-        drivers[session].push({ name: safeName, car: assignedCar });
-        io.emit('update:data', { sessions, drivers });
-        console.log(`Driver added: ${safeName} to session: ${session}, assigned car: ${assignedCar}`);
-      } else {
-        console.log(`Driver already exists: ${safeName} in session: ${session}`);
+      if (drivers[session].length >= cars.length) {
+        socket.emit('error:driverLimit', { session, message: 'This session already has the maximum number of drivers.' });
+        return;
       }
+      if (drivers[session].find((driver) => driver.name === name)) {
+        socket.emit('error:driverExists', { session, message: 'Driver already exists in this session.' });
+        return;
+      }
+
+      // Find the first available car
+      const assignedCars = drivers[session].map(driver => driver.car);
+      let assignedCar = car;
+      if (!assignedCar || assignedCars.includes(assignedCar)) {
+        assignedCar = cars.find(c => !assignedCars.includes(c));
+      }
+
+      if (!assignedCar) {
+        socket.emit('error:noAvailableCar', { session, message: 'No available cars.' });
+        return;
+      }
+
+      drivers[session].push({ name, car: assignedCar });
+      io.emit('update:data', { sessions, drivers, cars });
+      console.log(`Driver added: ${name} to session: ${session}, assigned car: ${assignedCar}`);
     } else {
       console.log(`Session not found: ${session}`);
     }
   });
 
   // Handle removing a session
-  socket.on('session:remove', (sessionName) => {
-    if (sessions.includes(sessionName)) {
-      sessions = sessions.filter((session) => session !== sessionName);
-      delete drivers[sessionName];
+  socket.on('session:remove', ({ session, key }) => {
+    if (!checkReceptionistKey(key)) return;
+
+    if (sessions.includes(session)) {
+      sessions = sessions.filter((s) => s !== session);
+      delete drivers[session];
       io.emit('update:data', { sessions, drivers });
-      console.log(`Session removed: ${sessionName}`);
+      console.log(`Session removed: ${session}`);
     } else {
-      console.log(`Session not found: ${sessionName}`);
+      console.log(`Session not found: ${session}`);
     }
   });
 
   // Handle removing a driver
-  socket.on('driver:remove', ({ session, name }) => {
+  socket.on('driver:remove', ({ session, name, key }) => {
+    if (!checkReceptionistKey(key)) return;
+
     const safeName = typeof name === 'string' ? name.trim() : String(name).trim();
 
     if (sessions.includes(session) && drivers[session]?.find((driver) => driver.name === safeName)) {
@@ -240,7 +143,9 @@ io.on('connection', (socket) => {
   });
 
   // Handle editing a driver
-  socket.on('driver:edit', ({ session, oldName, newName }) => {
+  socket.on('driver:edit', ({ session, oldName, newName, key }) => {
+    if (!checkReceptionistKey(key)) return;
+
     const safeOldName = typeof oldName === 'string' ? oldName.trim() : String(oldName).trim();
     const safeNewName = typeof newName === 'string' ? newName.trim() : String(newName).trim();
 
@@ -258,11 +163,40 @@ io.on('connection', (socket) => {
       console.log(`Driver edit failed: ${safeOldName} to ${safeNewName}`);
     }
   });
+
+  // Handle editing a driver's car
+  socket.on('driver:editCar', ({ session, name, car, key }) => {
+    if (!checkReceptionistKey(key)) return;
+
+    if (!sessions.includes(session)) {
+      console.log(`Session not found: ${session}`);
+      return;
+    }
+    const driverList = drivers[session];
+    const driver = driverList.find(d => d.name === name);
+    if (!driver) {
+      console.log(`Driver not found: ${name} in session: ${session}`);
+      return;
+    }
+    // Check if the car is already assigned to another driver in this session
+    if (driverList.some(d => d.car === car && d.name !== name)) {
+      socket.emit('error:carAssigned', { session, message: `Car ${car} is already assigned.` });
+      return;
+    }
+    driver.car = car;
+    io.emit('update:data', { sessions, drivers, cars });
+    console.log(`Driver car updated: ${name} in session: ${session}, new car: ${car}`);
+  });
+
+  // Add this to your fetch:data handler
+  socket.on('fetch:data', () => {
+    socket.emit('update:data', { sessions, drivers, cars });
+  });
 });
 
 // Start
 httpServer.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}/receptionist.html`);
-  console.log(`Server running on http://localhost:${PORT}/public/nextrace.html`);
+  console.log(`Server running on http://localhost:${PORT}/front-desk`);
+  console.log(`Server running on http://localhost:${PORT}/next-race`);
+  console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
 });
->>>>>>> 2fae8f1b053de707e420aad8eab9c6da3678f312
