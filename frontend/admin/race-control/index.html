@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Safety Control Panel</title>
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
   <h1>Safety Control Panel</h1>
@@ -14,10 +15,16 @@
     <button class="hazard" onclick="reportHazard()">Report Hazard</button>
     <button class="reset" onclick="resetRace()">Reset Race</button>
   </div>
-
+  <div id="keyModal">
+    <div>
+      <h2>Enter Receptionist Key</h2>
+      <input type="password" id="raceControlKeyInput">
+      <button id="submitKeyBtn" class="add">Enter</button>
+      <div id="keyError">Invalid key. Try again.</div>
+    </div>
+  </div>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
 
-  </script>
+  <script src="index.js"></script>
 </body>
 </html>

@@ -12,7 +12,43 @@ button {
     border-radius: 8px;
     border: none;
 }
+.add { background-color: #4caf50; color: white; }
 .start { background-color: #4caf50; color: white; }
 .stop { background-color: #f44336; color: white; }
 .hazard { background-color: #ff9800; color: white; }
 .reset { background-color: #2196f3; color: white; }
+
+#keyModal {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+#keyModal > div {
+    background: #222;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px #000;
+    min-width: 320px;
+    text-align: center;
+}
+#keyModal input[type="password"] {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #888;
+    margin-right: 1rem;
+}
+#keyModal button {
+    font-size: 1.2rem;
+}
+#keyError {
+    color: #f44336;
+    margin-top: 1rem;
+    display: none;
+}

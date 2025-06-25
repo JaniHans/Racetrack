@@ -20,6 +20,7 @@ const io = new Server(httpServer);
 
 const PORT = process.env.PORT || 3000;
 const RECEPTIONIST_KEY = process.env.KEY_RECEPTIONIST;
+const SAFETY_OFFICIAL_KEY = process.env.KEY_SAFETY;
 
 // Data storage for sessions and drivers
 let sessions = [];
@@ -121,11 +122,19 @@ io.on('connection', (socket) => {
   function checkReceptionistKey(key) {
     return key && key === RECEPTIONIST_KEY;
   }
+  // Helper function to check safety key
+  function checkSafetyKey(key) {
+    return key && key === SAFETY_OFFICIAL_KEY;
+  }
 
   // Handle receptionist authentication
   socket.on('auth:receptionist', ({ key }) => {
     socket.emit('auth:receptionist:result', checkReceptionistKey(key));
   });
+
+  socket.on('auth:race-control', ({key}) => {
+    socket.emit('auth:race-control:result', checkSafetyKey(key))
+  })
 
   // Handle adding a new session
   socket.on('session:add', ({ newSessionName, key }) => {
@@ -260,10 +269,17 @@ io.on('connection', (socket) => {
   socket.on('fetch:data', () => {
     socket.emit('update:data', { sessions, drivers, cars });
   });
+
 });
+
+// safety control
+
+
+
 
 // Start
 httpServer.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}/random-sht.html`);
   console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
+  console.log('Race-Control key:', process.env.KEY_SAFETY);
 });
