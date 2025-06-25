@@ -58,46 +58,46 @@ function saveState() {
   fs.writeFileSync(STATE_FILE, JSON.stringify(data, null, 2));
 }
 
-// Serve individual role UIs (e.g., /receptionist.html, /safety.html)
-app.use(express.static(path.join(__dirname, '../frontend')));
+// // Serve individual role UIs (e.g., /receptionist.html, /safety.html)
+// app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Serve public display screens from /public/
-app.use('/displays', express.static(path.join(__dirname, '../frontend/public')));
+app.use(express.static(path.join(__dirname, '../frontend/public')));
 
 // Simple API for health check or race info
 app.get('/api/status', (req, res) => {
   res.json({ status: 'ok', raceActive: global.raceState?.active || false });
 });
 
-// Serve the Front Desk page at /front-desk
-app.get('/front-desk', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/front-desk/front-desk.html'));
-});
-
-app.get('/lap-line-tracker', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/lap-line-tracker/lap-line-tracker.html'));
-});
-
-app.get('/leader-board', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/public/leader-board/leader-board.html'));
-});
-
-// Serve the Next Race page at /next-race
-app.get('/next-race', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/public/next-race/next-race.html'));
-});
-
-app.get('/race-countdown', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/public/race-countdown/race-countdown.html'));
-});
-
-app.get('/race-flags', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/public/race-flags/race-flags.html'));
-});
-
-app.get('/race-control', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/race-control/race-control.html'));
-});
+// // Serve the Front Desk page at /front-desk
+// app.get('/front-desk', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/front-desk/index.html'));
+// });
+//
+// app.get('/lap-line-tracker', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/lap-line-tracker/index.html'));
+// });
+//
+// app.get('/leader-board', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/public/leader-board/index.html'));
+// });
+//
+// // Serve the Next Race page at /next-race
+// app.get('/next-race', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/public/next-race/index.html'));
+// });
+//
+// app.get('/race-countdown', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/public/race-countdown/index.html'));
+// });
+//
+// app.get('/race-flags', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/public/race-flags/index.html'));
+// });
+//
+// app.get('/race-control', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/race-control/index.html'));
+// });
 
 // Socket.IO
 io.on('connection', (socket) => {
@@ -253,6 +253,6 @@ io.on('connection', (socket) => {
 
 // Start
 httpServer.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}/random-sht`);
+  console.log(`Server running on http://localhost:${PORT}/random-sht.html`);
   console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
 });
