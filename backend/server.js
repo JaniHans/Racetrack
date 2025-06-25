@@ -74,9 +74,29 @@ app.get('/front-desk', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/front-desk/front-desk.html'));
 });
 
+app.get('/lap-line-tracker', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/lap-line-tracker/lap-line-tracker.html'));
+});
+
+app.get('/leader-board', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/leader-board/leader-board.html'));
+});
+
 // Serve the Next Race page at /next-race
 app.get('/next-race', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/next-race/next-race.html'));
+});
+
+app.get('/race-countdown', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/race-countdown/race-countdown.html'));
+});
+
+app.get('/race-flags', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/race-flags/race-flags.html'));
+});
+
+app.get('/race-control', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/race-control/race-control.html'));
 });
 
 // Socket.IO
@@ -233,7 +253,6 @@ io.on('connection', (socket) => {
 
 // Start
 httpServer.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}/front-desk`);
-  console.log(`Server running on http://localhost:${PORT}/next-race`);
+  console.log(`Server running on http://localhost:${PORT}/random-sht`);
   console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
 });

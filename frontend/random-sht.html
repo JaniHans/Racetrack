@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Frontend Launcher</title>
+  <style>
+    body { background: #181818; color: #fff; font-family: sans-serif; }
+    .btn {
+      display: block;
+      margin: 1rem 0;
+      padding: 1rem 2rem;
+      background: #2196f3;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      text-align: left;
+      width: 300px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #1565c0; }
+  </style>
+</head>
+<body>
+  <h1>Open Frontend Apps</h1>
+  <button class="btn" onclick="window.open('/front-desk', '_blank')">Front Desk</button>
+  <button class="btn" onclick="window.open('/lap-line-tracker', '_blank')">Lap Line Tracker</button>
+  <button class="btn" onclick="window.open('/leader-board', '_blank')">Leader Board</button>
+  <button class="btn" onclick="window.open('/next-race', '_blank')">Next Race</button>
+  <button class="btn" onclick="window.open('/race-countdown', '_blank')">Race Countdown</button>
+  <button class="btn" onclick="window.open('/race-flags', '_blank')">Race Flags</button>
+  <button class="btn" onclick="window.open('/race-control', '_blank')">Race Control</button>
+</body>
+</html>

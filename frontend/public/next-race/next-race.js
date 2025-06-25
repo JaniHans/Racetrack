@@ -59,3 +59,16 @@ function updateUI() {
     sessionTables.appendChild(sessionContainer);
   });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('fullscreen');
+  if (btn) {
+    btn.onclick = () => {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        document.documentElement.requestFullscreen();
+      }
+    };
+  }
+});
