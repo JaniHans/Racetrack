@@ -58,24 +58,37 @@ function saveState() {
   fs.writeFileSync(STATE_FILE, JSON.stringify(data, null, 2));
 }
 
-// // Serve individual role UIs (e.g., /receptionist.html, /safety.html)
 // app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Serve public display screens from /public/
 app.use(express.static(path.join(__dirname, '../frontend/public')));
+
+// Serve all admin static assets dynamically
+const adminRoutes = ['front-desk', 'race-control', 'lap-line-tracker'];
+
+adminRoutes.forEach((route) => {
+  const dir = path.join(__dirname, `../frontend/admin/${route}`);
+  app.use(`/${route}`, express.static(dir));
+  app.get(`/${route}`, (req, res) => {
+    res.sendFile(path.join(dir, 'index.html'));
+  });
+});
 
 // Simple API for health check or race info
 app.get('/api/status', (req, res) => {
   res.json({ status: 'ok', raceActive: global.raceState?.active || false });
 });
 
-// // Serve the Front Desk page at /front-desk
+// // Serve the Front Desk admin page at /front-desk/admin
 // app.get('/front-desk', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../frontend/front-desk/index.html'));
+//   res.sendFile(path.join(__dirname, '../frontend/admin/front-desk/index.html'));
 // });
 //
 // app.get('/lap-line-tracker', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../frontend/lap-line-tracker/index.html'));
+//   res.sendFile(path.join(__dirname, '../frontend/admin/lap-line-tracker/index.html'));
+// });
+// app.get('/race-control', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../frontend/admin/race-control/index.html'));
 // });
 //
 // app.get('/leader-board', (req, res) => {
@@ -95,9 +108,7 @@ app.get('/api/status', (req, res) => {
 //   res.sendFile(path.join(__dirname, '../frontend/public/race-flags/index.html'));
 // });
 //
-// app.get('/race-control', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../frontend/race-control/index.html'));
-// });
+
 
 // Socket.IO
 io.on('connection', (socket) => {

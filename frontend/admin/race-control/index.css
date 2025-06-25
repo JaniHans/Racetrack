@@ -1,0 +1,18 @@
+body {
+    font-family: sans-serif;
+    background-color: #121212;
+    color: #fff;
+    padding: 2rem;
+}
+button {
+    padding: 1rem;
+    margin: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+}
+.start { background-color: #4caf50; color: white; }
+.stop { background-color: #f44336; color: white; }
+.hazard { background-color: #ff9800; color: white; }
+.reset { background-color: #2196f3; color: white; }
