@@ -131,7 +131,7 @@ io.on('connection', (socket) => {
   socket.on('auth:receptionist', ({ key }) => {
     socket.emit('auth:receptionist:result', checkReceptionistKey(key));
   });
-
+// Handle safety official authentication
   socket.on('auth:race-control', ({key}) => {
     socket.emit('auth:race-control:result', checkSafetyKey(key))
   })
@@ -272,6 +272,7 @@ io.on('connection', (socket) => {
 // safety control , start race
   socket.on('race:start', () => {
     //1. Update the global race state
+    sessions.remove()
     raceState.active = true;
     raceState.mode = 'Safe';
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
@@ -286,6 +287,40 @@ io.on('connection', (socket) => {
     }, raceState.countdown * 1000);
     io.emit('raceStarted', raceState);
   });
+  socket.on('race:stop', () => {
+    console.log('STOP RACE RECEIVED'); //
+    raceState.mode = 'Danger';
+    raceState.flag = 'RED';
+    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+
+  });
+  socket.on('race:hazard', () => {
+    console.log('Hazard RACE RECEIVED'); //
+    raceState.mode = 'Hazard';
+    raceState.flag = 'YELLOW';
+    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+
+  });
+  socket.on('race:finish', () => {
+    console.log('FINISH RACE RECEIVED'); //
+    raceState.mode = 'Danger';
+    raceState.flag = 'CHEQUERED';
+    raceState.active = false;
+    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+    io.emit('raceFinished', raceState);
+  });
+  socket.on('race:endSession', () => {
+    raceState.mode = 'Danger';
+    raceState.flag = 'RED';
+
+    // Advance to the next session, if applicable
+    raceState.currentSession = raceState.nextSession;
+    raceState.nextSession = getNextSession(); // NOT WORKING YETas
+
+    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+    io.emit('sessionEnded', raceState); // notify clients like Next Race screen
+  });
+
 });
 
 

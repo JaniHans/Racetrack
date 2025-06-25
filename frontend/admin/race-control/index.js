@@ -8,6 +8,10 @@ socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
     // Optionally update UI based on state
 });
+socket.on('raceFinished', (state) => {
+    console.log('Race has started:', state);
+    // Optionally update UI based on state
+});
 
 socket.on('modeChanged', ({ mode, flag }) => {
     console.log(`Mode changed to ${mode}, flag: ${flag}`);
@@ -20,6 +24,7 @@ const start = document.getElementById('start-race');
 const stop = document.getElementById('stop-race');
 const hazard = document.getElementById('hazard-race');
 const finish = document.getElementById('finish-race');
+const end = document.getElementById('end-session');
 
 
 function startRace() {
@@ -33,6 +38,7 @@ function startRace() {
 
 function stopRace() {
     socket.emit('race:stop');
+
 }
 
 function reportHazard() {
@@ -40,7 +46,16 @@ function reportHazard() {
 }
 
 function finishRace() {
-    socket.emit('race:reset');
+    socket.emit('race:finish');
+    start.style.display = 'none';
+    stop.style.display = 'none';
+    hazard.style.display = 'none';
+    finish.style.display = 'none';
+    end.style.display = 'inline-block';
+}
+
+function endSession() {
+    socket.emit('race:endSession');
 }
 
 socket.on('connect', () => {
@@ -75,6 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
             stop.onclick = stopRace;
             hazard.onclick = reportHazard;
             finish.onclick = finishRace;
+            end.onclick = endSession;
 
         } else {
             error.style.display = 'block'; // <-- This will show the error!

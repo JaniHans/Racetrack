@@ -36,6 +36,11 @@ button {
     display: none;
 }
 
+.end {
+    background-color: #f44336; color: white;
+    display: none;
+}
+
 #keyModal {
     position: fixed;
     inset: 0;

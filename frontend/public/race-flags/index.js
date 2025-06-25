@@ -1,21 +1,29 @@
 const socket = io();
+let previousFlag = null;
 
 socket.on('raceStarted', (state) => {
     updateFlagScreen(state.flag); // should be 'GREEN' initially
 });
 
-socket.on('modeChanged', ({ flag }) => {
+socket.on('modeChanged', ({ mode, flag }) => {
+    console.log(`Mode changed to ${mode}, flag: ${flag}`);
     updateFlagScreen(flag);
 });
 
 function updateFlagScreen(flag) {
-    document.querySelector('.fullDiv').style.display = 'inline-block';
 
+    if (previousFlag) {
+        const previous = document.getElementById(previousFlag.toLowerCase());
+        if (previous) {
+            previous.style.display = 'none';
+        }
+    }
     const target = document.getElementById(flag.toLowerCase());
     if (target) {
-        console.log("target exists")
+        console.log('target exists', flag);
+        target.style.display = 'inline-block';
+        previousFlag = flag;
     } else {
-        console.log("target does not exist")
+        console.log('target does not exist', flag);
     }
-    target.style.display = 'inline-block';
 }

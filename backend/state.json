@@ -2,7 +2,9 @@
   "sessions": [
     "w",
     "ddd",
-    "d"
+    "d",
+    "asd",
+    "asdsda"
   ],
   "drivers": {
     "w": [
@@ -13,10 +15,16 @@
       {
         "name": "s",
         "car": "Car B"
+      },
+      {
+        "name": "ddd",
+        "car": "Car C"
       }
     ],
     "ddd": [],
-    "d": []
+    "d": [],
+    "asd": [],
+    "asdsda": []
   },
   "raceState": {
     "active": true,
