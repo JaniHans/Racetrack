@@ -12,11 +12,29 @@ button {
     border-radius: 8px;
     border: none;
 }
-.add { background-color: #4caf50; color: white; }
-.start { background-color: #4caf50; color: white; }
-.stop { background-color: #f44336; color: white; }
-.hazard { background-color: #ff9800; color: white; }
-.reset { background-color: #2196f3; color: white; }
+.buttons {
+    display: flex;
+    flex-direction: row;
+}
+.add {
+    background-color: #4caf50; color: white;
+}
+.start {
+    background-color: #4caf50; color: white;
+    display: none;
+}
+.stop {
+    background-color: #f44336; color: white;
+    display: none;
+}
+.hazard {
+    background-color: #ff9800; color: white;
+    display: none;
+}
+.finish {
+    background-color: #2196f3; color: white;
+    display: none;
+}
 
 #keyModal {
     position: fixed;

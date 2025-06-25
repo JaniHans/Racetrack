@@ -1,6 +1,8 @@
 {
   "sessions": [
-    "w"
+    "w",
+    "ddd",
+    "d"
   ],
   "drivers": {
     "w": [
@@ -12,7 +14,15 @@
         "name": "s",
         "car": "Car B"
       }
-    ]
+    ],
+    "ddd": [],
+    "d": []
   },
-  "raceState": {}
+  "raceState": {
+    "active": true,
+    "mode": "Safe",
+    "flag": "GREEN",
+    "startTime": 1750854512608,
+    "countdown": 600
+  }
 }

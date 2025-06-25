@@ -2,23 +2,17 @@
 <html>
 <head>
   <title>Flag Display</title>
-  <style>
-    body { font-size: 5em; text-align: center; margin-top: 20vh; }
-    .GREEN { color: green; }
-    .YELLOW { color: yellow; }
-    .RED { color: red; }
-  </style>
+  <link rel="stylesheet" href="index.css">
 </head>
-<body id="flag">Waiting for flag...</body>
-<script src="/socket.io/socket.io.js"></script>
-<script type="module">
-  import { EVENTS } from '/events.js';
-  const socket = io();
-  const flag = document.getElementById('flag');
+<body id="flag">Waiting for flag..
 
-  socket.on(EVENTS.RACE_STATE, (state) => {
-    flag.textContent = state.flag + ' FLAG';
-    flag.className = state.flag;
-  });
-</script>
+<div class="fullDiv" id="green"></div>
+<div class="fullDiv" id="yellow"></div>
+<div  class="fullDiv" id="red"></div>
+<div class="fullDiv" id="chequered"></div>
+
+</body>
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="index.js"></script>
 </html>

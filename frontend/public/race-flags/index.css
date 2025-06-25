@@ -1,0 +1,42 @@
+body {
+    font-size: 5em;
+    text-align: center;
+    margin-top: 20vh;;
+}
+
+.fullDiv {
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: 0;
+        overflow: hidden;
+        position: fixed;
+        display: none;
+}
+
+#green {
+    background-color: green;
+    display: none;
+}
+#yellow {
+    background-color: yellow;
+    display: none;
+}
+#red {
+    background-color: red;
+    display: none;
+}
+#chequered {
+    background-image:
+            linear-gradient(45deg, black 25%, transparent 25%),
+            linear-gradient(-45deg, black 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, black 75%),
+            linear-gradient(-45deg, transparent 75%, black 75%);
+    background-size: 40px 40px;
+    background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+    background-color: white;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+
+}

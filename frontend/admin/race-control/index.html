@@ -9,15 +9,15 @@
 <body>
   <h1>Safety Control Panel</h1>
   <p>Use this interface to control flags and ensure safety during races.</p>
-  <div>
-    <button class="start" onclick="startRace()">Start Race</button>
-    <button class="stop" onclick="stopRace()">Stop Race</button>
-    <button class="hazard" onclick="reportHazard()">Report Hazard</button>
-    <button class="reset" onclick="resetRace()">Reset Race</button>
+  <div class="buttons">
+    <button class="start" id="start-race" >Start Race</button>
+    <button class="stop" id="stop-race" >Stop Race</button>
+    <button class="hazard" id="hazard-race" >Report Hazard</button>
+    <button class="finish" id="finish-race" >Finish Race</button>
   </div>
   <div id="keyModal">
     <div>
-      <h2>Enter Receptionist Key</h2>
+      <h2>Enter Safety Official Key</h2>
       <input type="password" id="raceControlKeyInput">
       <button id="submitKeyBtn" class="add">Enter</button>
       <div id="keyError">Invalid key. Try again.</div>

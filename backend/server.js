@@ -269,10 +269,26 @@ io.on('connection', (socket) => {
   socket.on('fetch:data', () => {
     socket.emit('update:data', { sessions, drivers, cars });
   });
-
+// safety control , start race
+  socket.on('race:start', () => {
+    //1. Update the global race state
+    raceState.active = true;
+    raceState.mode = 'Safe';
+    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+    raceState.flag = 'GREEN';
+    raceState.startTime = Date.now();
+    raceState.countdown = 600;
+    setTimeout(() => {
+      raceState.mode = 'Finish';
+      raceState.flag = 'CHEQUERED';
+      raceState.active = false;
+      io.emit('raceFinished', raceState);
+    }, raceState.countdown * 1000);
+    io.emit('raceStarted', raceState);
+  });
 });
 
-// safety control
+
 
 
 

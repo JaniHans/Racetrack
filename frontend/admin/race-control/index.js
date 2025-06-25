@@ -1,8 +1,34 @@
 const socket = io();
+
+socket.on('connect', () => {
+    console.log('Connected to server');
+});
+
+socket.on('raceStarted', (state) => {
+    console.log('Race has started:', state);
+    // Optionally update UI based on state
+});
+
+socket.on('modeChanged', ({ mode, flag }) => {
+    console.log(`Mode changed to ${mode}, flag: ${flag}`);
+    // Optionally update button text or flag screen
+});
+
 let raceControlKey = null;
+
+const start = document.getElementById('start-race');
+const stop = document.getElementById('stop-race');
+const hazard = document.getElementById('hazard-race');
+const finish = document.getElementById('finish-race');
+
 
 function startRace() {
     socket.emit('race:start');
+    start.textContent= 'Safe';
+    stop.style.display = 'inline-block';
+    hazard.style.display = 'inline-block';
+    finish.style.display = 'inline-block';
+
 }
 
 function stopRace() {
@@ -13,7 +39,7 @@ function reportHazard() {
     socket.emit('race:hazard');
 }
 
-function resetRace() {
+function finishRace() {
     socket.emit('race:reset');
 }
 
@@ -42,6 +68,14 @@ window.addEventListener('DOMContentLoaded', () => {
             raceControlKey = input.value.trim();
             modal.style.display = 'none';
             error.style.display = 'none'; // Hide error on success
+
+            start.style.display = 'inline-block';
+
+            start.onclick = startRace;
+            stop.onclick = stopRace;
+            hazard.onclick = reportHazard;
+            finish.onclick = finishRace;
+
         } else {
             error.style.display = 'block'; // <-- This will show the error!
             input.value = '';
