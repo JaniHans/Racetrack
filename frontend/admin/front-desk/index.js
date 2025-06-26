@@ -68,7 +68,7 @@ function updateUI() {
         const row = document.createElement('tr');
 
         const driverCell = document.createElement('td');
-        driverCell.textContent = driver.name;s
+        driverCell.textContent = driver.name;
 
         const carCell = document.createElement('td');
         carCell.textContent = driver.car || '';

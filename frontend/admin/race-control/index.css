@@ -23,6 +23,10 @@ button {
     background-color: #4caf50; color: white;
     display: none;
 }
+.safe {
+    background-color: #4caf50; color: white;
+    display: none;
+}
 .stop {
     background-color: #f44336; color: white;
     display: none;

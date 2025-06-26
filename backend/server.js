@@ -21,6 +21,7 @@ const io = new Server(httpServer);
 const PORT = process.env.PORT || 3000;
 const RECEPTIONIST_KEY = process.env.KEY_RECEPTIONIST;
 const SAFETY_OFFICIAL_KEY = process.env.KEY_SAFETY;
+const isDev = process.env.NODE_ENV === "development";
 
 // Data storage for sessions and drivers
 let sessions = [];
@@ -272,13 +273,14 @@ io.on('connection', (socket) => {
 // safety control , start race
   socket.on('race:start', () => {
     //1. Update the global race state
-    sessions.remove()
+
     raceState.active = true;
     raceState.mode = 'Safe';
-    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     raceState.flag = 'GREEN';
+    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     raceState.startTime = Date.now();
-    raceState.countdown = 600;
+
+    raceState.countdown = isDev ? 60 : 600;
     setTimeout(() => {
       raceState.mode = 'Finish';
       raceState.flag = 'CHEQUERED';
@@ -287,6 +289,11 @@ io.on('connection', (socket) => {
     }, raceState.countdown * 1000);
     io.emit('raceStarted', raceState);
   });
+  socket.on('race:safe', () => {
+    raceState.mode = 'Safe';
+    raceState.flag = 'GREEN';
+    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+  })
   socket.on('race:stop', () => {
     console.log('STOP RACE RECEIVED'); //
     raceState.mode = 'Danger';
@@ -314,8 +321,9 @@ io.on('connection', (socket) => {
     raceState.flag = 'RED';
 
     // Advance to the next session, if applicable
-    raceState.currentSession = raceState.nextSession;
-    raceState.nextSession = getNextSession(); // NOT WORKING YETas
+
+
+    // NOT WORKING YETas
 
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     io.emit('sessionEnded', raceState); // notify clients like Next Race screen
