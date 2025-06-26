@@ -45,13 +45,25 @@ function updateUI() {
     sessionTitle.textContent = `Session: ${session}`;
     sessionTitle.style.margin = '0';
 
+    const buttonGroup = document.createElement('div');
+    buttonGroup.style.display = 'flex';
+    buttonGroup.style.gap = '1rem';
+
     const removeButton = document.createElement('button');
     removeButton.textContent = 'Remove Session';
     removeButton.className = 'remove';
     removeButton.onclick = () => removeRaceSession(session);
 
+    const lockInButton = document.createElement('button');
+    lockInButton.textContent = 'Lock In';
+    lockInButton.className = 'add';
+    lockInButton.onclick = () => lockInSession(session);
+
+    buttonGroup.appendChild(removeButton);
+    buttonGroup.appendChild(lockInButton);
+
     sessionHeader.appendChild(sessionTitle);
-    sessionHeader.appendChild(removeButton);
+    sessionHeader.appendChild(buttonGroup);
     sessionContainer.appendChild(sessionHeader);
 
     // Table
@@ -276,6 +288,10 @@ function editDriver(session, oldName, newName) {
 
 function editCar(session, driverName, newCar) {
   socket.emit('driver:editCar', { session, name: driverName, car: newCar, key: receptionistKey });
+}
+
+function lockInSession(session) {
+  socket.emit('session:lockin', { session, key: receptionistKey });
 }
 
 // Handle driver limit error

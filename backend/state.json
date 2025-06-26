@@ -1,17 +1,9 @@
 {
   "sessions": [
-    "w",
-    "ddd",
-    "d",
-    "asd",
-    "asdsda"
+    "v"
   ],
   "drivers": {
     "w": [
-      {
-        "name": "g",
-        "car": "Car A"
-      },
       {
         "name": "s",
         "car": "Car B"
@@ -24,13 +16,22 @@
     "ddd": [],
     "d": [],
     "asd": [],
-    "asdsda": []
+    "v": [
+      {
+        "name": "s",
+        "car": "Car A"
+      },
+      {
+        "name": "g",
+        "car": "Car B"
+      }
+    ]
   },
   "raceState": {
-    "active": true,
-    "mode": "Safe",
-    "flag": "GREEN",
-    "startTime": 1750854512608,
+    "active": false,
+    "mode": "Danger",
+    "flag": "RED",
+    "startTime": 1750979120629,
     "countdown": 600
   }
 }

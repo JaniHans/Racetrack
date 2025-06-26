@@ -272,8 +272,7 @@ io.on('connection', (socket) => {
   });
 // safety control , start race
   socket.on('race:start', () => {
-    //1. Update the global race state
-
+    // 1. Update the global race state
     raceState.active = true;
     raceState.mode = 'Safe';
     raceState.flag = 'GREEN';
@@ -281,12 +280,23 @@ io.on('connection', (socket) => {
     raceState.startTime = Date.now();
 
     raceState.countdown = isDev ? 60 : 600;
+
+    // 2. Remove the current session and its drivers
+    const startedSession = sessions.shift(); // Remove the first session
+    if (startedSession) {
+      delete drivers[startedSession];
+      io.emit('update:data', { sessions, drivers, cars }); // Notify all clients
+      saveState();
+      console.log(`Session started and removed: ${startedSession}`);
+    }
+
     setTimeout(() => {
       raceState.mode = 'Finish';
       raceState.flag = 'CHEQUERED';
       raceState.active = false;
       io.emit('raceFinished', raceState);
     }, raceState.countdown * 1000);
+
     io.emit('raceStarted', raceState);
   });
   socket.on('race:safe', () => {
@@ -328,10 +338,15 @@ io.on('connection', (socket) => {
     io.emit('sessionEnded', raceState); // notify clients like Next Race screen
   });
 socket.on('fetch:current-session', () => {
-  const currentSession = sessions.shift() || null;
+  const currentSession = sessions[0] || null;
+  //const currentSession = sessions.shift() || null;
   io.emit('receive:current-session', currentSession);
-
-})
+});
+socket.on('session:lockin', ({ session, key }) => {
+  if (!checkReceptionistKey(key)) return;
+  io.emit('session:lockedin', { session });
+  console.log(`Session locked in: ${session}`);
+});
 });
 
 

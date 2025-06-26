@@ -1,8 +1,11 @@
 const socket = io();
 
 let nextSession = null;
+let raceSessions = [];
+let drivers = {};
+let cars = [];
 
-
+socket.emit('fetch:data');
 socket.emit('fetch:current-session');
 
 socket.on('connect', () => {
@@ -29,6 +32,49 @@ socket.on('receive:current-session', (currentSession) => {
 
 })
 
+socket.on('update:data', (data) => {
+    raceSessions = data.sessions;
+    drivers = data.drivers;
+    cars = data.cars || cars;
+    updateDriverTable();
+});
+
+function updateDriverTable() {
+    const tableContainer = document.getElementById('driverTable');
+    tableContainer.innerHTML = '';
+
+    // Show only the first session (current/upcoming)
+    const session = raceSessions[0];
+    const currentRace = document.getElementById('current-race');
+    const startRaceBtn = document.getElementById('start-race');
+
+    if (!session) {
+        tableContainer.innerHTML = '<p>No upcoming session.</p>';
+        if (currentRace) currentRace.innerHTML = '';
+        if (startRaceBtn) startRaceBtn.style.display = 'none';
+        return;
+    }
+
+    // Update the session name in the UI
+    if (currentRace) currentRace.innerHTML = session;
+    if (startRaceBtn) startRaceBtn.style.display = 'inline-block';
+
+    const table = document.createElement('table');
+    table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th></tr>`;
+
+    if (drivers[session]) {
+        drivers[session].forEach(({ name, car }) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${name}</td><td>${car}</td>`;
+            table.appendChild(row);
+        });
+    }
+
+    tableContainer.appendChild(table);
+}
+
+// Call updateDriverTable on page load in case data arrives late
+document.addEventListener('DOMContentLoaded', updateDriverTable);
 
 let raceControlKey = null;
 
@@ -185,3 +231,10 @@ function logoutSafety() {
     error.style.display = 'none';
     input.value = '';
 }
+
+socket.on('session:lockedin', ({ session }) => {
+  const currentRace = document.getElementById('current-race');
+  if (currentRace) {
+    currentRace.innerHTML = `<span style="color:#4caf50;font-weight:bold;">Ready: ${session}</span>`;
+  }
+});
