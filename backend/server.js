@@ -322,13 +322,16 @@ io.on('connection', (socket) => {
 
     // Advance to the next session, if applicable
 
-
-    // NOT WORKING YETas
+    // NOT WORKING YET
 
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     io.emit('sessionEnded', raceState); // notify clients like Next Race screen
   });
+socket.on('fetch:current-session', () => {
+  const currentSession = sessions.shift() || null;
+  io.emit('receive:current-session', currentSession);
 
+})
 });
 
 

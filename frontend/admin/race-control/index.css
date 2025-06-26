@@ -44,7 +44,11 @@ button {
     background-color: #f44336; color: white;
     display: none;
 }
-
+.remove { background-color: #f44336; color: white; }
+.start-new {
+    background-color: #4caf50; color: white;
+    display: none;
+}
 #keyModal {
     position: fixed;
     inset: 0;
@@ -77,5 +81,18 @@ button {
 #keyError {
     color: #f44336;
     margin-top: 1rem;
+    display: none;
+}
+#new-race-container {
+    display: none;
+}
+#no-races {
+    display: none;
+}
+.upcoming {
+    display: flex;
+    flex-direction: row;
+}
+#upcoming-race {
     display: none;
 }

@@ -1,7 +1,8 @@
 const socket = io();
 
-const timerContainer = document.getElementById('time');
+let timerInterval = null;
 
+const timerContainer = document.getElementById('time');
 
 socket.on('connect', () => {
     console.log('Connected to server');
@@ -17,11 +18,18 @@ socket.on('raceFinished', (state) => {
     console.log('Race has finished:', state);
     // Optionally update UI based on state
     // Reload the timer
-    reloadTimer()
+    finishRace(state)
 });
 
 function startTimer(state) {
-   let x = setInterval(function () {
+
+
+
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+
+    timerInterval = setInterval(function () {
        const now = Date.now();
        let difference = now - state.startTime;
 
@@ -32,17 +40,19 @@ function startTimer(state) {
        timerContainer.innerHTML = minutes + "m " + seconds + "s"
 
        if (timer < 0) {
-           clearInterval(x);
+           clearInterval(timerInterval);
            timerContainer.innerHTML = "RACE FINISHED";
        }
-
-
    }, 1000);
-
-
 
 }
 
-function reloadTimer() {
-
+function finishRace(state) {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+    if (!state.active) {
+     timerContainer.innerHTML = "RACE FINISHED";
+ }
 }

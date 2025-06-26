@@ -7,16 +7,30 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
+<button id="logoutBtn" class="remove" style="float:right;">Logout</button>
   <h1>Safety Control Panel</h1>
+
   <p>Use this interface to control flags and ensure safety during races.</p>
+
+<h2>Upcoming Race</h2>
+<p id="current-race">
+  </p>
+
   <div class="buttons">
+
     <button class="start" id="start-race" >Start Race</button>
     <button class="safe" id="safe-race" >Safe</button>
     <button class="stop" id="stop-race" >Stop Race</button>
     <button class="hazard" id="hazard-race" >Report Hazard</button>
     <button class="finish" id="finish-race" >Finish Race</button>
-    <button class="end" id="end-session" >Finish Race</button>
+    <button class="end" id="end-session">End Session</button>
+
   </div>
+  <div id="no-races">No Upcoming Races</div>
+  <div id="upcoming-race">
+
+  </div>
+<button class="start-new" id="start-new-race" >PROCEED TO THE NEW RACE</button>
   <div id="keyModal">
     <div>
       <h2>Enter Safety Official Key</h2>
