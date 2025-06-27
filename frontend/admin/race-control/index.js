@@ -47,6 +47,7 @@ function updateDriverTable() {
 
     // Show only the first session (current/upcoming)
     const session = raceSessions[0];
+    console.log(session + "DID IT LOAD SESSION IN UPDATE DRIVER TABLE")
     const currentRace = document.getElementById('current-race');
     const startRaceBtn = document.getElementById('start-race');
 
@@ -56,7 +57,7 @@ function updateDriverTable() {
         if (startRaceBtn) startRaceBtn.style.display = 'none';
         return;
     }
-
+    currentRace.innerHTML = session;
     // Update the session name in the UI
     if (currentRace) currentRace.innerHTML = session;
     if (startRaceBtn) {
@@ -98,10 +99,15 @@ const end = document.getElementById('end-session');
 const newRace = document.getElementById('start-new-race');
 const logoutBtn = document.getElementById('logoutBtn');
 const currentRace = document.getElementById('current-race');
+const thisRace = document.getElementById('this-race');
+const header = document.createElement("h2");
 
 function startRace() {
 
     currentSession = raceSessions.shift();
+
+    header.innerHTML = "Current Race : " + currentSession;
+    thisRace.appendChild(header);
 
     if (!currentSession) {
         console.log("No available races to start");
@@ -142,11 +148,15 @@ function finishRace() {
     hazard.style.display = 'none';
     finish.style.display = 'none';
     end.style.display = 'inline-block';
+    thisRace.removeChild(header);
+    header.innerHTML = currentSession + " race finished"
+    thisRace.appendChild(header);
 
 }
 function endSession() {
     socket.emit('race:endSession')
     end.style.display = 'none';
+
     if (raceSessions.length !== 0) {
         start.style.display = 'inline-block';
     }
