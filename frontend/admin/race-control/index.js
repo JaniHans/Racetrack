@@ -147,7 +147,9 @@ function finishRace() {
 function endSession() {
     socket.emit('race:endSession')
     end.style.display = 'none';
-    start.style.display = 'inline-block';
+    if (raceSessions.length !== 0) {
+        start.style.display = 'inline-block';
+    }
 }
 
 
