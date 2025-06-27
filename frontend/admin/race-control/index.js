@@ -105,6 +105,7 @@ function startRace() {
 
     if (!currentSession) {
         console.log("No available races to start");
+        start.style.display = 'none';
         return;
     }
 
