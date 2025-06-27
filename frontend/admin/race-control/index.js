@@ -1,12 +1,12 @@
 const socket = io();
 
 let nextSession = null;
+let currentSession = null;
+let raceActive = false;
 let raceSessions = [];
 let drivers = {};
 let cars = [];
 
-socket.emit('fetch:data');
-socket.emit('fetch:current-session');
 
 socket.on('connect', () => {
     console.log('Connected to server');
@@ -14,11 +14,13 @@ socket.on('connect', () => {
 
 socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
+    raceActive = state.active;
     // Optionally update UI based on state
     // Update upcoming race
 });
 socket.on('raceFinished', (state) => {
     console.log('Race has finished:', state);
+    raceActive = state.active;
     // Optionally update UI based on state
     // Reload the page
 });
@@ -27,8 +29,8 @@ socket.on('modeChanged', ({ mode, flag }) => {
     console.log(`Mode changed to ${mode}, flag: ${flag}`);
     // Optionally update button text or flag screen
 });
-socket.on('receive:current-session', (currentSession) => {
-    nextSession = currentSession;
+socket.on('receive:current-session', (currentRace) => {
+    currentSession = currentRace;
 
 })
 
@@ -57,7 +59,16 @@ function updateDriverTable() {
 
     // Update the session name in the UI
     if (currentRace) currentRace.innerHTML = session;
-    if (startRaceBtn) startRaceBtn.style.display = 'inline-block';
+    if (startRaceBtn) {
+        if (!raceActive) {
+            startRaceBtn.style.display = 'inline-block';
+            console.log("START RACE button should be active")
+        } else {
+            startRaceBtn.style.display = 'none';
+            console.log("START RACE button should not be active")
+        }
+    }
+
 
     const table = document.createElement('table');
     table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th></tr>`;
@@ -87,30 +98,29 @@ const end = document.getElementById('end-session');
 const newRace = document.getElementById('start-new-race');
 const logoutBtn = document.getElementById('logoutBtn');
 const currentRace = document.getElementById('current-race');
-const nextRace = document.getElementById('upcoming-race');
-
-
 
 function startRace() {
 
+    currentSession = raceSessions.shift();
 
-if (nextSession !== null) {
-    currentRace.style.display = 'inline-block';
-    currentRace.innerHTML = nextSession;
-    nextRace.style.display = 'none';
-    socket.emit('race:start');
-    document.querySelector('h2').innerHTML = "Current Race";
+    if (!currentSession) {
+        console.log("No available races to start");
+        return;
+    }
+
     start.style.display = 'none';
+    raceActive = true;
+    socket.emit('race:start');
+    console.log()
     safe.style.display = 'inline-block';
     stop.style.display = 'inline-block';
     hazard.style.display = 'inline-block';
     finish.style.display = 'inline-block';
-    logoutBtn.style.display = 'none';
 
-} else {
-    currentRace.innerHTML = "No races scheduled";
+    console.log("Race start triggered locally : " + currentSession);
+
 }
-}
+
 function safeRace() {
     socket.emit('race:safe');
 }
@@ -126,7 +136,6 @@ function reportHazard() {
 
 function finishRace() {
     socket.emit('race:finish');
-    start.style.display = 'none';
     safe.style.display = 'none';
     stop.style.display = 'none';
     hazard.style.display = 'none';
@@ -134,37 +143,12 @@ function finishRace() {
     end.style.display = 'inline-block';
 
 }
-
 function endSession() {
-    socket.emit('race:endSession');
+    socket.emit('race:endSession')
     end.style.display = 'none';
-    logoutBtn.style.display = 'block';
-    socket.emit('fetch:current-session');
-    currentRace.style.display = 'none';
-
-    socket.on('receive:current-session', (session) => {
-        nextSession = session;
-        if (nextSession) {
-            console.log(nextSession + "The race exists")
-            document.querySelector('h2').innerHTML = "Upcoming race";
-            nextRace.style.display = 'block';
-            nextRace.innerHTML = nextSession;
-            newRace.style.display = 'block';
-        } else {
-            console.log("No race exists with: " + currentRace)
-            document.getElementById('no-races').style.display = 'block';
-            nextRace.innerHTML = "";
-
-        }
-    })
+    start.style.display = 'inline-block';
 }
 
-
-
-function proceedToTheNewRace() {
-    newRace.style.display = 'none';
-    startRace();
-}
 
 function logout() {
     document.location.reload();
@@ -195,7 +179,7 @@ window.addEventListener('DOMContentLoaded', () => {
             raceControlKey = input.value.trim();
             modal.style.display = 'none';
             error.style.display = 'none'; // Hide error on success
-            currentRace.innerHTML = nextSession;
+            currentRace.innerHTML = currentSession;
             start.style.display = 'inline-block';
 
             start.onclick = startRace;
@@ -204,7 +188,6 @@ window.addEventListener('DOMContentLoaded', () => {
             hazard.onclick = reportHazard;
             finish.onclick = finishRace;
             end.onclick = endSession;
-            newRace.onclick = proceedToTheNewRace;
             logoutBtn.onclick = logout;
 
         } else {
@@ -233,8 +216,8 @@ function logoutSafety() {
 }
 
 socket.on('session:lockedin', ({ session }) => {
-  const currentRace = document.getElementById('current-race');
-  if (currentRace) {
-    currentRace.innerHTML = `<span style="color:#4caf50;font-weight:bold;">Ready: ${session}</span>`;
-  }
+    const currentRace = document.getElementById('current-race');
+    if (currentRace) {
+        currentRace.innerHTML = `<span style="color:#4caf50;font-weight:bold;">Ready: ${session}</span>`;
+    }
 });

@@ -46,6 +46,7 @@ function loadState() {
     } catch (e) {
       console.error('Failed to load state:', e);
     }
+
   }
 }
 loadState();
