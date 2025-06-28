@@ -128,15 +128,23 @@ io.on('connection', (socket) => {
   function checkSafetyKey(key) {
     return key && key === SAFETY_OFFICIAL_KEY;
   }
+  // Helper function to check observer key
+  function checkObserverKey(key) {
+    return key && key === process.env.KEY_OBSERVER;
+  }
 
   // Handle receptionist authentication
   socket.on('auth:receptionist', ({ key }) => {
     socket.emit('auth:receptionist:result', checkReceptionistKey(key));
   });
 // Handle safety official authentication
-  socket.on('auth:race-control', ({key}) => {
-    socket.emit('auth:race-control:result', checkSafetyKey(key))
-  })
+  socket.on('auth:race-control', ({ key }) => {
+    socket.emit('auth:race-control:result', checkSafetyKey(key));
+  });
+// Handle lap line observer authentication
+  socket.on('auth:observer', ({ key }) => {
+    socket.emit('auth:observer:result', checkObserverKey(key));
+  });
 
   // Handle adding a new session
   socket.on('session:add', ({ newSessionName, key }) => {
@@ -348,16 +356,19 @@ socket.on('session:lockin', ({ session, key }) => {
   io.emit('session:lockedin', { session });
   console.log(`Session locked in: ${session}`);
 });
+
+  // Lap completed event
+  socket.on('lap:completed', ({ car, key }) => {
+    if (key !== process.env.KEY_OBSERVER) return;
+    if (!global.raceState.laps) global.raceState.laps = {};
+    global.raceState.laps[car] = (global.raceState.laps[car] || 0) + 1;
+    io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
+  });
 });
-
-
-
-
-
-
 // Start
 httpServer.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}/random-sht.html`);
   console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
   console.log('Race-Control key:', process.env.KEY_SAFETY);
+  console.log('Lap-Line-Tracker key:', process.env.KEY_OBSERVER);
 });
