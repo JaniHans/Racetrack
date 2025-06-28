@@ -1,0 +1,66 @@
+body {
+  font-family: sans-serif;
+  background-color: #121212;
+  color: #fff;
+  padding: 2rem;
+}
+#lapButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.lap-btn {
+  font-size: 2rem;
+  padding: 2rem 4rem;
+  border-radius: 2rem;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  min-width: 200px;
+  min-height: 100px;
+  transition: background 0.2s;
+}
+.lap-btn:disabled {
+  background: #888;
+  cursor: not-allowed;
+}
+#lapCounts {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+}
+#keyModal {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+#keyModal > div {
+  background: #222;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px #000;
+  min-width: 320px;
+  text-align: center;
+}
+#keyModal input[type="password"] {
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #888;
+  margin-right: 1rem;
+}
+#keyModal button {
+  font-size: 1.2rem;
+}
+#keyError {
+  color: #f44336;
+  margin-top: 1rem;
+  display: none;
+}

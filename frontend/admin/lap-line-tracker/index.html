@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lap-line Tracker</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <h1>Lap-line Tracker</h1>
+  <div id="lapButtons"></div>
+  <div id="lapCounts"></div>
+  <div id="keyModal">
+    <div>
+      <h2>Enter Observer Key</h2>
+      <input type="password" id="observerKeyInput">
+      <button id="submitKeyBtn" class="add">Enter</button>
+      <div id="keyError">Invalid key. Try again.</div>
+    </div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
