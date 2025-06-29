@@ -1,5 +1,7 @@
 {
-  "sessions": [],
+  "sessions": [
+    "s"
+  ],
   "drivers": {
     "w": [
       {
@@ -10,13 +12,28 @@
         "name": "ddd",
         "car": "Car C"
       }
+    ],
+    "s": [
+      {
+        "name": "s",
+        "car": "Car A",
+        "fastestLap": null,
+        "currentLap": 0
+      }
     ]
   },
   "raceState": {
     "active": true,
     "mode": "Safe",
     "flag": "GREEN",
-    "startTime": 1751129672194,
-    "countdown": 600
+    "startTime": 1751211315340,
+    "countdown": 600,
+    "laps": {
+      "Car A": 4,
+      "Car B": 1,
+      "Car D": 1,
+      "Car G": 1,
+      "Car H": 1
+    }
   }
 }
