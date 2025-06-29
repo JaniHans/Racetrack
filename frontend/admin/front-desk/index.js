@@ -16,6 +16,21 @@ socket.on('update:data', (data) => {
   updateUI();
 });
 
+socket.on('raceStarted', (state) => {
+  console.log('Race has started:', state);
+  removeRunningRace();
+  // Optionally update UI based on state
+  // Update upcoming race
+});
+
+function removeRunningRace() {
+  const container = document.getElementById("sessionTables");
+  const firstChildDiv = container.querySelector("div");
+  if (firstChildDiv) {
+    container.removeChild(firstChildDiv);
+  }
+}
+
 function updateUI() {
   const sessionSelect = document.getElementById('sessionSelect');
   const sessionTables = document.getElementById('sessionTables');
