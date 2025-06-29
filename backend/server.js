@@ -284,6 +284,7 @@ io.on('connection', (socket) => {
   // Add this to your fetch:data handler
   socket.on('fetch:data', () => {
     socket.emit('update:data', { sessions, drivers, cars });
+
   });
 // safety control , start race
   socket.on('race:start', () => {
@@ -297,10 +298,10 @@ io.on('connection', (socket) => {
     raceState.countdown = isDev ? 60 : 600;
 
     // 2. Remove the current session and its drivers
-    const startedSession = sessions.shift(); // Remove the first session
+    const startedSession = sessions[0] || null; // Remove the first session
     if (startedSession) {
       delete drivers[startedSession];
-      io.emit('update:data', { sessions, drivers, cars }); // Notify all clients
+       // Notify all clients
       saveState();
       console.log(`Session started and removed: ${startedSession}`);
     }
@@ -311,7 +312,7 @@ io.on('connection', (socket) => {
       raceState.active = false;
       io.emit('raceFinished', raceState);
     }, raceState.countdown * 1000);
-
+    io.emit('schedule:front-desk', { sessions, drivers, cars }); //
     io.emit('raceStarted', raceState);
   });
   socket.on('race:safe', () => {
@@ -345,6 +346,8 @@ io.on('connection', (socket) => {
     raceState.mode = 'Danger';
     raceState.flag = 'RED';
 
+    sessions.shift();
+    io.emit('update:data', { sessions, drivers, cars }); //
     // Advance to the next session, if applicable
 
     // NOT WORKING YET
@@ -352,6 +355,9 @@ io.on('connection', (socket) => {
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     io.emit('sessionEnded', raceState); // notify clients like Next Race screen
   });
+
+
+
 socket.on('fetch:current-session', () => {
   const currentSession = sessions[0] || null;
   //const currentSession = sessions.shift() || null;

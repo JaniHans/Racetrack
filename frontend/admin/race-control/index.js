@@ -1,11 +1,20 @@
 const socket = io();
 
-let nextSession = null;
 let currentSession = null;
 let raceActive = false;
 let raceSessions = [];
 let drivers = {};
 let cars = [];
+
+const start = document.getElementById('start-race');
+const safe = document.getElementById('safe-race');
+const stop = document.getElementById('stop-race');
+const hazard = document.getElementById('hazard-race');
+const finish = document.getElementById('finish-race');
+const end = document.getElementById('end-session');
+const currentRace = document.getElementById('current-race');
+const thisRace = document.getElementById('this-race');
+const header = document.createElement("h2");
 
 
 socket.on('connect', () => {
@@ -15,6 +24,7 @@ socket.on('connect', () => {
 socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
     raceActive = state.active;
+    console.log(raceActive + " Race has started")
     // Optionally update UI based on state
     // Update upcoming race
 });
@@ -24,6 +34,7 @@ socket.on('raceFinished', (state) => {
     // Optionally update UI based on state
     // Reload the page
 });
+
 
 socket.on('modeChanged', ({ mode, flag }) => {
     console.log(`Mode changed to ${mode}, flag: ${flag}`);
@@ -48,27 +59,27 @@ function updateDriverTable() {
     // Show only the first session (current/upcoming)
     const session = raceSessions[0];
     console.log(session + "DID IT LOAD SESSION IN UPDATE DRIVER TABLE")
+    console.log("whats the status of the race" + raceActive);
     const currentRace = document.getElementById('current-race');
-    const startRaceBtn = document.getElementById('start-race');
+
 
     if (!session) {
         tableContainer.innerHTML = '<p>No upcoming session.</p>';
         if (currentRace) currentRace.innerHTML = '';
-        if (startRaceBtn) startRaceBtn.style.display = 'none';
         return;
+    } else {
+        currentSession = session;
     }
     currentRace.innerHTML = session;
     // Update the session name in the UI
     if (currentRace) currentRace.innerHTML = session;
-    if (startRaceBtn) {
-        if (!raceActive) {
-            startRaceBtn.style.display = 'inline-block';
+
+        if (!raceActive && currentSession) {
+            console.log(currentSession)
+            start.style.display = 'inline-block';
             console.log("START RACE button should be active")
-        } else {
-            startRaceBtn.style.display = 'none';
-            console.log("START RACE button should not be active")
         }
-    }
+
 
 
     const table = document.createElement('table');
@@ -83,6 +94,9 @@ function updateDriverTable() {
     }
 
     tableContainer.appendChild(table);
+    if (raceActive) {
+        tableContainer.style.display = 'none';
+    }
 }
 
 // Call updateDriverTable on page load in case data arrives late
@@ -90,29 +104,20 @@ document.addEventListener('DOMContentLoaded', updateDriverTable);
 
 let raceControlKey = null;
 
-const start = document.getElementById('start-race');
-const safe = document.getElementById('safe-race');
-const stop = document.getElementById('stop-race');
-const hazard = document.getElementById('hazard-race');
-const finish = document.getElementById('finish-race');
-const end = document.getElementById('end-session');
-const newRace = document.getElementById('start-new-race');
-const logoutBtn = document.getElementById('logoutBtn');
-const currentRace = document.getElementById('current-race');
-const thisRace = document.getElementById('this-race');
-const header = document.createElement("h2");
 
 function startRace() {
 
     currentSession = raceSessions.shift();
 
-    header.innerHTML = "Current Race : " + currentSession;
-    thisRace.appendChild(header);
+
 
     if (!currentSession) {
         console.log("No available races to start");
         start.style.display = 'none';
         return;
+    } else {
+        header.innerHTML = "Current Race : " + currentSession;
+        thisRace.appendChild(header);
     }
 
     start.style.display = 'none';
@@ -157,9 +162,11 @@ function endSession() {
     socket.emit('race:endSession')
     end.style.display = 'none';
 
+
     if (raceSessions.length !== 0) {
         start.style.display = 'inline-block';
     }
+
 }
 
 
@@ -193,7 +200,7 @@ window.addEventListener('DOMContentLoaded', () => {
             modal.style.display = 'none';
             error.style.display = 'none'; // Hide error on success
             currentRace.innerHTML = currentSession;
-            start.style.display = 'inline-block';
+
 
             start.onclick = startRace;
             safe.onclick = safeRace;

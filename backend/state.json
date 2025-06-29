@@ -1,6 +1,6 @@
 {
   "sessions": [
-    "s"
+    "first"
   ],
   "drivers": {
     "w": [
@@ -13,27 +13,13 @@
         "car": "Car C"
       }
     ],
-    "s": [
-      {
-        "name": "s",
-        "car": "Car A",
-        "fastestLap": null,
-        "currentLap": 0
-      }
-    ]
+    "first": []
   },
   "raceState": {
-    "active": true,
-    "mode": "Safe",
-    "flag": "GREEN",
-    "startTime": 1751211315340,
-    "countdown": 600,
-    "laps": {
-      "Car A": 4,
-      "Car B": 1,
-      "Car D": 1,
-      "Car G": 1,
-      "Car H": 1
-    }
+    "active": false,
+    "mode": "Danger",
+    "flag": "RED",
+    "startTime": 1751214324797,
+    "countdown": 600
   }
 }
