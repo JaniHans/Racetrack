@@ -2,10 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Live Leaderboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
-  <h1>Leaderboard</h1>
-  <p>This screen shows real-time race positions.</p>
+<h1>Leaderboard</h1>
+<div id="this-race"></div>
+
+<h4>Current Race</h4>
+<p id="current-race">
+</p>
+<iframe class="timer" src="/race-countdown/index.html" width="150" height="150" style="border: none;"></iframe>
+
+<div id="driverTable"></div>
+
+
+
+<iframe class="flag" src="/race-flags/index.html" width="250" height="250" style="border: none;"></iframe>
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="index.js"></script>
 </body>
 </html>

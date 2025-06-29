@@ -81,6 +81,9 @@ adminRoutes.forEach((route) => {
 app.get('/api/status', (req, res) => {
   res.json({ status: 'ok', raceActive: global.raceState?.active || false });
 });
+// for timer to be used everywhere
+app.use(express.static(path.join(__dirname,'../frontend/public/race-countdown')));
+
 
 // // Serve the Front Desk admin page at /front-desk/admin
 // app.get('/front-desk', (req, res) => {
@@ -186,11 +189,14 @@ io.on('connection', (socket) => {
         socket.emit('error:noAvailableCar', { session, message: 'No available cars.' });
         return;
       }
+      let fastestLap = null;
+      let currentLap = 0;
 
-      drivers[session].push({ name, car: assignedCar });
-      io.emit('update:data', { sessions, drivers, cars });
+      drivers[session].push({ name, car: assignedCar, fastestLap, currentLap});
+      console.log(drivers[session]);
+      io.emit('update:data', { sessions, drivers, cars, fastestLap, currentLap });
       saveState();
-      console.log(`Driver added: ${name} to session: ${session}, assigned car: ${assignedCar}`);
+      console.log(`Driver added: ${name} to session: ${session}, assigned car: ${assignedCar}, fastest lap time ${fastestLap} and current lap time ${currentLap}`);
     } else {
       console.log(`Session not found: ${session}`);
     }
