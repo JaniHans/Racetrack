@@ -93,7 +93,7 @@ button {
     display: flex;
     flex-direction: row;
 }
-#upcoming-race {
+#upcoming-race-container {
     display: none;
 }
 #driverTable table {

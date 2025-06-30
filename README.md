@@ -25,3 +25,4 @@ beachside-race-control/
 sessions dont dissappear in front - desk when race started [x]
 you can remove already running session in front desk which creates bugs [x]
 if all sessions finished race control does not reload and start button does not appear again [x]
+Race Control updates upcoming sessions in all situations [x]
