@@ -8,6 +8,7 @@ let lapTimestamps = {}; // car -> [timestamps]
 let bestLapTimes = {};  // car -> ms
 let raceStartTime = null;
 
+socket.emit('best:LapTimes', {bestLapTimes});
 window.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('keyModal');
   const input = document.getElementById('observerKeyInput');
@@ -54,6 +55,7 @@ socket.on('raceStarted', (state) => {
   bestLapTimes = {};
   updateLapButtons();
   updateLapCounts();
+  console.log("Status of the race :  " + raceActive)
 });
 socket.on('raceFinished', (state) => {
   raceActive = false;
@@ -80,6 +82,7 @@ function updateLapButtons() {
         const lapTime = now - prev;
         if (!bestLapTimes[car] || lapTime < bestLapTimes[car]) {
           bestLapTimes[car] = lapTime;
+
         }
       } else if (raceStartTime) {
         // First lap: time since race start
@@ -87,7 +90,14 @@ function updateLapButtons() {
         bestLapTimes[car] = lapTime;
       }
 
+      console.log(bestLapTimes)
+      console.log(bestLapTimes["Car A"])
+      console.log(bestLapTimes["Car B"])
       socket.emit('lap:completed', { car, key: observerKey });
+      socket.emit('lap:done' , {
+      value : bestLapTimes
+      });
+      console.log("Lap completed")
       updateLapCounts();
     };
     container.appendChild(lapButton);
@@ -103,5 +113,6 @@ function updateLapCounts() {
     let best = bestLapTimes[car];
     let bestStr = best ? (best / 1000).toFixed(2) + ' s' : '-';
     container.innerHTML += `<div>Car ${car}: ${count} laps | Best Lap: ${bestStr}</div>`;
+
   });
 }

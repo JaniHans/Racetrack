@@ -292,6 +292,7 @@ io.on('connection', (socket) => {
     raceState.active = true;
     raceState.mode = 'Safe';
     raceState.flag = 'GREEN';
+    io.emit('raceStarted', raceState);
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     raceState.startTime = Date.now();
 
@@ -313,7 +314,7 @@ io.on('connection', (socket) => {
       io.emit('raceFinished', raceState);
     }, raceState.countdown * 1000);
     io.emit('schedule:front-desk', { sessions, drivers, cars }); //
-    io.emit('raceStarted', raceState);
+
   });
   socket.on('race:safe', () => {
     raceState.mode = 'Safe';
@@ -341,11 +342,12 @@ io.on('connection', (socket) => {
     raceState.active = false;
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     io.emit('raceFinished', raceState);
+    saveState();
   });
   socket.on('race:endSession', () => {
     raceState.mode = 'Danger';
     raceState.flag = 'RED';
-
+    raceState.laps = {};
     sessions.shift();
     io.emit('update:data', { sessions, drivers, cars }); //
     // Advance to the next session, if applicable
@@ -354,6 +356,7 @@ io.on('connection', (socket) => {
 
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     io.emit('sessionEnded', raceState); // notify clients like Next Race screen
+    saveState();
   });
 
 
@@ -368,12 +371,17 @@ socket.on('session:lockin', ({ session, key }) => {
   io.emit('session:lockedin', { session });
   console.log(`Session locked in: ${session}`);
 });
+// lap done event
+  socket.on('lap:done', (data) => {
+    socket.broadcast.emit('lap:done', data); // Sends to all clients except sender
+  });
 
   // Lap completed event
   socket.on('lap:completed', ({ car, key }) => {
     if (key !== process.env.KEY_OBSERVER) return;
     if (!global.raceState.laps) global.raceState.laps = {};
     global.raceState.laps[car] = (global.raceState.laps[car] || 0) + 1;
+    console.log("LAP COUNTER " + global.raceState.laps[car]);
     io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
   });
 });

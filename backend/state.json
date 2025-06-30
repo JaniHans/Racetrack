@@ -1,6 +1,6 @@
 {
   "sessions": [
-    "third"
+    "first"
   ],
   "drivers": {
     "w": [
@@ -18,17 +18,8 @@
     "active": true,
     "mode": "Safe",
     "flag": "GREEN",
-    "startTime": 1751276293246,
+    "startTime": 1751301018127,
     "countdown": 600,
-    "laps": {
-      "Car A": 5,
-      "Car B": 5,
-      "Car C": 5,
-      "Car D": 5,
-      "Car E": 5,
-      "Car F": 5,
-      "Car G": 6,
-      "Car H": 5
-    }
+    "laps": {}
   }
 }
