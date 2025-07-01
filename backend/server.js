@@ -47,6 +47,17 @@ function loadState() {
       console.error('Failed to load state:', e);
     }
 
+  } else {
+    fs.writeFile(
+        STATE_FILE,
+        JSON.stringify({}, null, 2),
+        err => {
+          // Checking for errors
+          if (err) throw err;
+
+          // Success
+          console.log("State file created with empty object.");
+        });
   }
 }
 loadState();
