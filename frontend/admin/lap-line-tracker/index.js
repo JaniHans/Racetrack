@@ -42,6 +42,13 @@ socket.on('update:data', (data) => {
   if (data.raceState && data.raceState.laps) {
     lapCounts = data.raceState.laps;
   }
+  if (data.raceState && data.raceState.bestLaps) {
+    bestLapTimes = { ...data.raceState.bestLaps };
+  }
+  if (data.raceState && data.raceState.lapTimestamps) {
+    lapTimestamps = { ...data.raceState.lapTimestamps };
+  }
+  raceActive = !!(data.raceState && data.raceState.active);
   updateLapButtons();
   updateLapCounts();
 });
@@ -50,14 +57,32 @@ socket.on('update:data', (data) => {
 socket.on('raceStarted', (state) => {
   raceActive = true;
   raceStartTime = state.startTime || Date.now();
-  lapTimestamps = {};
-  bestLapTimes = {};
+  // Load best lap times from backend
+  if (state.bestLaps) {
+    bestLapTimes = { ...state.bestLaps };
+  } else {
+    bestLapTimes = {};
+  }
+  if (state.lapTimestamps) {
+    lapTimestamps = { ...state.lapTimestamps };
+  } else {
+    lapTimestamps = {};
+  }
   updateLapButtons();
   updateLapCounts();
 });
 socket.on('raceFinished', (state) => {
   raceActive = false;
   updateLapButtons();
+});
+socket.on('sessionEnded', () => {
+  lapCounts = {};
+  bestLapTimes = {};
+  lapTimestamps = {};
+  raceActive = false;
+  raceStartTime = null;
+  updateLapButtons();
+  updateLapCounts();
 });
 
 // Lap buttons

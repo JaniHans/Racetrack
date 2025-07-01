@@ -1,25 +1,24 @@
 {
   "sessions": [
-    "first"
+    "s",
+    "w"
   ],
   "drivers": {
-    "w": [
+    "s": [
       {
         "name": "s",
-        "car": "Car B"
+        "car": "Car A",
+        "fastestLap": null,
+        "currentLap": 0
       },
       {
-        "name": "ddd",
-        "car": "Car C"
+        "name": "w",
+        "car": "Car B",
+        "fastestLap": null,
+        "currentLap": 0
       }
     ],
-    "first": []
+    "w": []
   },
-  "raceState": {
-    "active": false,
-    "mode": "Danger",
-    "flag": "RED",
-    "startTime": 1751214324797,
-    "countdown": 600
-  }
+  "raceState": {}
 }

@@ -42,6 +42,8 @@ function loadState() {
       drivers = data.drivers || {};
       // If you have raceState or other state, load it here as well
       global.raceState = data.raceState || {};
+      if (!global.raceState.laps) global.raceState.laps = {};
+      if (!global.raceState.bestLaps) global.raceState.bestLaps = {};
       console.log('State loaded from disk.');
     } catch (e) {
       console.error('Failed to load state:', e);
@@ -297,22 +299,13 @@ io.on('connection', (socket) => {
 
     raceState.countdown = isDev ? 60 : 600;
 
-    // 2. Remove the current session and its drivers
-    const startedSession = sessions[0] || null; // Remove the first session
-    if (startedSession) {
-      delete drivers[startedSession];
-       // Notify all clients
-      saveState();
-      console.log(`Session started and removed: ${startedSession}`);
-    }
-
     setTimeout(() => {
       raceState.mode = 'Finish';
       raceState.flag = 'CHEQUERED';
       raceState.active = false;
       io.emit('raceFinished', raceState);
     }, raceState.countdown * 1000);
-    io.emit('schedule:front-desk', { sessions, drivers, cars }); //
+    io.emit('schedule:front-desk', { sessions, drivers, cars });
     io.emit('raceStarted', raceState);
   });
   socket.on('race:safe', () => {
@@ -321,21 +314,21 @@ io.on('connection', (socket) => {
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
   })
   socket.on('race:stop', () => {
-    console.log('STOP RACE RECEIVED'); //
+    console.log('STOP RACE RECEIVED');
     raceState.mode = 'Danger';
     raceState.flag = 'RED';
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
 
   });
   socket.on('race:hazard', () => {
-    console.log('Hazard RACE RECEIVED'); //
+    console.log('Hazard RACE RECEIVED');
     raceState.mode = 'Hazard';
     raceState.flag = 'YELLOW';
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
 
   });
   socket.on('race:finish', () => {
-    console.log('FINISH RACE RECEIVED'); //
+    console.log('FINISH RACE RECEIVED');
     raceState.mode = 'Danger';
     raceState.flag = 'CHEQUERED';
     raceState.active = false;
@@ -346,11 +339,15 @@ io.on('connection', (socket) => {
     raceState.mode = 'Danger';
     raceState.flag = 'RED';
 
-    sessions.shift();
+    // Remove the current session and its drivers here
+    const endedSession = sessions.shift();
+    if (endedSession) {
+      delete drivers[endedSession];
+      saveState();
+    }
+
     io.emit('update:data', { sessions, drivers, cars }); //
     // Advance to the next session, if applicable
-
-    // NOT WORKING YET
 
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     io.emit('sessionEnded', raceState); // notify clients like Next Race screen
@@ -373,7 +370,30 @@ socket.on('session:lockin', ({ session, key }) => {
   socket.on('lap:completed', ({ car, key }) => {
     if (key !== process.env.KEY_OBSERVER) return;
     if (!global.raceState.laps) global.raceState.laps = {};
+    if (!global.raceState.bestLaps) global.raceState.bestLaps = {};
+
+    const now = Date.now();
     global.raceState.laps[car] = (global.raceState.laps[car] || 0) + 1;
+
+    if (!global.raceState.lapTimestamps) global.raceState.lapTimestamps = {};
+    if (!global.raceState.lapTimestamps[car]) global.raceState.lapTimestamps[car] = [];
+    global.raceState.lapTimestamps[car].push(now);
+
+    let lapTime = null;
+    const times = global.raceState.lapTimestamps[car];
+    if (times.length > 1) {
+      lapTime = times[times.length - 1] - times[times.length - 2];
+    }
+    if (lapTime !== null) {
+      if (
+        !global.raceState.bestLaps[car] ||
+        lapTime < global.raceState.bestLaps[car]
+      ) {
+        global.raceState.bestLaps[car] = lapTime;
+      }
+    }
+
+    saveState();
     io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
   });
 });
