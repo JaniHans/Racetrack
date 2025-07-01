@@ -294,6 +294,7 @@ io.on('connection', (socket) => {
     raceState.active = true;
     raceState.mode = 'Safe';
     raceState.flag = 'GREEN';
+    io.emit('raceStarted', raceState);
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     raceState.startTime = Date.now();
 
@@ -334,6 +335,7 @@ io.on('connection', (socket) => {
     raceState.active = false;
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     io.emit('raceFinished', raceState);
+    saveState();
   });
   socket.on('race:endSession', () => {
     raceState.mode = 'Danger';
@@ -351,6 +353,7 @@ io.on('connection', (socket) => {
 
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
     io.emit('sessionEnded', raceState); // notify clients like Next Race screen
+    saveState();
   });
 
 
@@ -365,6 +368,10 @@ socket.on('session:lockin', ({ session, key }) => {
   io.emit('session:lockedin', { session });
   console.log(`Session locked in: ${session}`);
 });
+// lap done event
+  socket.on('lap:done', (data) => {
+    socket.broadcast.emit('lap:done', data); // Sends to all clients except sender
+  });
 
   // Lap completed event
   socket.on('lap:completed', ({ car, key }) => {
@@ -378,7 +385,6 @@ socket.on('session:lockin', ({ session, key }) => {
     if (!global.raceState.lapTimestamps) global.raceState.lapTimestamps = {};
     if (!global.raceState.lapTimestamps[car]) global.raceState.lapTimestamps[car] = [];
     global.raceState.lapTimestamps[car].push(now);
-
     let lapTime = null;
     const times = global.raceState.lapTimestamps[car];
     if (times.length > 1) {
@@ -396,9 +402,6 @@ socket.on('session:lockin', ({ session, key }) => {
     saveState();
     io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
   });
-});
-// Start
-httpServer.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}/random-sht.html`);
   console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
   console.log('Race-Control key:', process.env.KEY_SAFETY);

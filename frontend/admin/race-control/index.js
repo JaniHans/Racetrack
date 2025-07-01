@@ -12,10 +12,11 @@ const stop = document.getElementById('stop-race');
 const hazard = document.getElementById('hazard-race');
 const finish = document.getElementById('finish-race');
 const end = document.getElementById('end-session');
-const currentRace = document.getElementById('current-race');
+
 const thisRace = document.getElementById('this-race');
 const header = document.createElement("h2");
-
+const upcomingRace = document.getElementById('upcoming-race');
+const upcomingRaceContainer = document.createElement('upcoming-race-container')
 
 socket.on('connect', () => {
     console.log('Connected to server');
@@ -60,27 +61,23 @@ function updateDriverTable() {
     const session = raceSessions[0];
     console.log(session + "DID IT LOAD SESSION IN UPDATE DRIVER TABLE")
     console.log("whats the status of the race" + raceActive);
-    const currentRace = document.getElementById('current-race');
+
 
 
     if (!session) {
         tableContainer.innerHTML = '<p>No upcoming session.</p>';
-        if (currentRace) currentRace.innerHTML = '';
         return;
     } else {
         currentSession = session;
+        upcomingRaceContainer.style.display = 'block';
+        upcomingRace.innerHTML = currentSession;
     }
-    currentRace.innerHTML = session;
-    // Update the session name in the UI
-    if (currentRace) currentRace.innerHTML = session;
-
         if (!raceActive && currentSession) {
+            thisRace.innerHTML = "Upcoming race: " + currentSession;
             console.log(currentSession)
             start.style.display = 'inline-block';
             console.log("START RACE button should be active")
         }
-
-
 
     const table = document.createElement('table');
     table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th></tr>`;
@@ -108,14 +105,14 @@ let raceControlKey = null;
 function startRace() {
 
     currentSession = raceSessions.shift();
-
-
+    upcomingRaceContainer.style.display = 'none';
 
     if (!currentSession) {
         console.log("No available races to start");
         start.style.display = 'none';
         return;
     } else {
+        thisRace.innerHTML = "";
         header.innerHTML = "Current Race : " + currentSession;
         thisRace.appendChild(header);
     }
@@ -161,6 +158,7 @@ function finishRace() {
 function endSession() {
     socket.emit('race:endSession')
     end.style.display = 'none';
+    upcomingRaceContainer.style.display = 'block';
 
 
     if (raceSessions.length !== 0) {
@@ -199,7 +197,7 @@ window.addEventListener('DOMContentLoaded', () => {
             raceControlKey = input.value.trim();
             modal.style.display = 'none';
             error.style.display = 'none'; // Hide error on success
-            currentRace.innerHTML = currentSession;
+            thisRace.innerHTML = "Upcoming race: " + currentSession;
 
 
             start.onclick = startRace;
@@ -236,7 +234,7 @@ function logoutSafety() {
 }
 
 socket.on('session:lockedin', ({ session }) => {
-    const currentRace = document.getElementById('current-race');
+    const currentRace = document.getElementById('this-race');
     if (currentRace) {
         currentRace.innerHTML = `<span style="color:#4caf50;font-weight:bold;">Ready: ${session}</span>`;
     }
