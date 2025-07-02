@@ -303,9 +303,10 @@ io.on('connection', (socket) => {
     raceState.active = true;
     raceState.mode = 'Safe';
     raceState.flag = 'GREEN';
+    raceState.startTime = Date.now();
     io.emit('raceStarted', raceState);
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
-    raceState.startTime = Date.now();
+
 
     raceState.countdown = isDev ? 60 : 600;
 

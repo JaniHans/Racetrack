@@ -1,5 +1,7 @@
 {
-  "sessions": [],
+  "sessions": [
+    "first"
+  ],
   "drivers": {
     "w": [
       {
@@ -16,7 +18,7 @@
     "active": true,
     "mode": "Safe",
     "flag": "GREEN",
-    "startTime": 1751129672194,
-    "countdown": 600
+    "startTime": 1751464411296,
+    "countdown": 60
   }
 }
