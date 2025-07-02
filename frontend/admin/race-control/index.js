@@ -35,6 +35,14 @@ socket.on('raceFinished', (state) => {
     raceActive = state.active;
     // Optionally update UI based on state
     // Reload the page
+    safe.style.display = 'none';
+    stop.style.display = 'none';
+    hazard.style.display = 'none';
+    finish.style.display = 'none';
+    end.style.display = 'inline-block';
+    thisRace.removeChild(header);
+    header.innerHTML = currentSession + " race finished"
+    thisRace.appendChild(header);
 });
 
 socket.on('modeChanged', ({ mode, flag }) => {
