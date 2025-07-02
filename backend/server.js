@@ -252,12 +252,12 @@ io.on('connection', (socket) => {
     const safeNewName = typeof newName === 'string' ? newName.trim() : String(newName).trim();
 
     if (
-      sessions.includes(session) &&
-      drivers[session]?.find((driver) => driver.name === safeOldName) &&
-      !drivers[session]?.find((driver) => driver.name === safeNewName)
+        sessions.includes(session) &&
+        drivers[session]?.find((driver) => driver.name === safeOldName) &&
+        !drivers[session]?.find((driver) => driver.name === safeNewName)
     ) {
       drivers[session] = drivers[session].map((driver) =>
-        driver.name === safeOldName ? { ...driver, name: safeNewName } : driver
+          driver.name === safeOldName ? { ...driver, name: safeNewName } : driver
       );
       io.emit('update:data', { sessions, drivers });
       saveState();
@@ -303,17 +303,18 @@ io.on('connection', (socket) => {
     raceState.active = true;
     raceState.mode = 'Safe';
     raceState.flag = 'GREEN';
+    raceState.startTime = Date.now();
     io.emit('raceStarted', raceState);
     io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
-    raceState.startTime = Date.now();
+
 
     raceState.countdown = isDev ? 60 : 600;
-
+    saveState();
     // 2. Remove the current session and its drivers
     const startedSession = sessions[0] || null; // Remove the first session
     if (startedSession) {
       delete drivers[startedSession];
-       // Notify all clients
+      // Notify all clients
       saveState();
       console.log(`Session started and removed: ${startedSession}`);
     }
@@ -372,16 +373,16 @@ io.on('connection', (socket) => {
 
 
 
-socket.on('fetch:current-session', () => {
-  const currentSession = sessions[0] || null;
-  //const currentSession = sessions.shift() || null;
-  io.emit('receive:current-session', currentSession);
-});
-socket.on('session:lockin', ({ session, key }) => {
-  if (!checkReceptionistKey(key)) return;
-  io.emit('session:lockedin', { session });
-  console.log(`Session locked in: ${session}`);
-});
+  socket.on('fetch:current-session', () => {
+    const currentSession = sessions[0] || null;
+    //const currentSession = sessions.shift() || null;
+    io.emit('receive:current-session', currentSession);
+  });
+  socket.on('session:lockin', ({ session, key }) => {
+    if (!checkReceptionistKey(key)) return;
+    io.emit('session:lockedin', { session });
+    console.log(`Session locked in: ${session}`);
+  });
 // lap done event
   socket.on('lap:done', (data) => {
     socket.broadcast.emit('lap:done', data); // Sends to all clients except sender

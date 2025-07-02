@@ -9,6 +9,9 @@ socket.on('modeChanged', ({ mode, flag }) => {
     console.log(`Mode changed to ${mode}, flag: ${flag}`);
     updateFlagScreen(flag);
 });
+socket.on('raceFinished', (state) => {
+    updateFlagScreen(state.flag); // should be 'GREEN' initially
+});
 
 function updateFlagScreen(flag) {
 

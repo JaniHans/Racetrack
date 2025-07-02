@@ -22,11 +22,9 @@ beachside-race-control/
 
 ### BUGS
 
-sessions dont dissappear in front - desk when race started [x]
-you can remove already running session in front desk which creates bugs [x]
-if all sessions finished race control does not reload and start button does not appear again [x]
-Race Control updates upcoming sessions in all situations [x]
-On starting the server last race stays in front desk[]
+Timer on finished, it takes from racestate wrong starttime[]
+On starting the server last race stays in front desk[] - 
 if lapline tracker page is not loaded before race start pressed then lap line buttons dont enable[]
 race control after all races finished does not display "no upcoming session" + start button is available[]
 if raceActive adding new races from front desk will dissapear the table in the leaderboard and disables buttons in lap line[]
+timer not refreshing with new racec starts from 8 min + []

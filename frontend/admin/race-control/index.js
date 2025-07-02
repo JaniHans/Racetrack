@@ -5,6 +5,7 @@ let raceActive = false;
 let raceSessions = [];
 let drivers = {};
 let cars = [];
+let automaticFinish = false;
 
 const start = document.getElementById('start-race');
 const safe = document.getElementById('safe-race');
@@ -36,7 +37,6 @@ socket.on('raceFinished', (state) => {
     // Reload the page
 });
 
-
 socket.on('modeChanged', ({ mode, flag }) => {
     console.log(`Mode changed to ${mode}, flag: ${flag}`);
     // Optionally update button text or flag screen
@@ -59,8 +59,6 @@ function updateDriverTable() {
 
     // Show only the first session (current/upcoming)
     const session = raceSessions[0];
-    console.log(session + "DID IT LOAD SESSION IN UPDATE DRIVER TABLE")
-    console.log("whats the status of the race" + raceActive);
 
 
 
@@ -73,10 +71,14 @@ function updateDriverTable() {
         upcomingRace.innerHTML = currentSession;
     }
         if (!raceActive && currentSession) {
-            thisRace.innerHTML = "Upcoming race: " + currentSession;
+            if (!currentSession) {
+                thisRace.innerHTML = "";
+            }
             console.log(currentSession)
+            thisRace.innerHTML = "Upcoming race: " + currentSession;
+
             start.style.display = 'inline-block';
-            console.log("START RACE button should be active")
+
         }
 
     const table = document.createElement('table');
@@ -108,7 +110,7 @@ function startRace() {
     upcomingRaceContainer.style.display = 'none';
 
     if (!currentSession) {
-        console.log("No available races to start");
+
         start.style.display = 'none';
         return;
     } else {
@@ -120,13 +122,11 @@ function startRace() {
     start.style.display = 'none';
     raceActive = true;
     socket.emit('race:start');
-    console.log()
+
     safe.style.display = 'inline-block';
     stop.style.display = 'inline-block';
     hazard.style.display = 'inline-block';
     finish.style.display = 'inline-block';
-
-    console.log("Race start triggered locally : " + currentSession);
 
 }
 
@@ -144,6 +144,7 @@ function reportHazard() {
 }
 
 function finishRace() {
+
     socket.emit('race:finish');
     safe.style.display = 'none';
     stop.style.display = 'none';
@@ -162,6 +163,8 @@ function endSession() {
 
 
     if (raceSessions.length !== 0) {
+        console.log(raceSessions)
+        console.log("START BUTTON AVAILABLE")
         start.style.display = 'inline-block';
     }
 

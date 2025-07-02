@@ -1,6 +1,7 @@
 const socket = io();
 
 let timerInterval = null;
+let raceActive = null;
 
 const timerContainer = document.getElementById('time');
 
@@ -16,6 +17,7 @@ socket.on('raceStarted', (state) => {
 });
 socket.on('raceFinished', (state) => {
     console.log('Race has finished:', state);
+
     // Optionally update UI based on state
     // Reload the timer
     finishRace(state)
@@ -29,9 +31,13 @@ function startTimer(state) {
         clearInterval(timerInterval);
     }
 
+
     timerInterval = setInterval(function () {
        const now = Date.now();
+
        let difference = now - state.startTime;
+        console.log(now + "time now")
+        console.log(state.startTime + "start time")
 
        let timer = (state.countdown * 1000) - difference;
        let minutes = Math.floor((timer % (1000 * 60 * 60)) / (1000 * 60));

@@ -1,9 +1,9 @@
 {
   "sessions": [
-    "first"
+    "second"
   ],
   "drivers": {
-    "first": [
+    "third": [
       {
         "name": "a",
         "car": "Car A",
@@ -27,26 +27,41 @@
         "car": "Car D",
         "fastestLap": null,
         "currentLap": 0
-      },
+      }
+    ],
+    "f": [
       {
-        "name": "e",
-        "car": "Car E",
+        "name": "a",
+        "car": "Car A",
         "fastestLap": null,
         "currentLap": 0
       },
       {
-        "name": "f",
-        "car": "Car F",
+        "name": "b",
+        "car": "Car B",
         "fastestLap": null,
         "currentLap": 0
       },
       {
-        "name": "g",
-        "car": "Car G",
+        "name": "c",
+        "car": "Car C",
+        "fastestLap": null,
+        "currentLap": 0
+      },
+      {
+        "name": "d",
+        "car": "Car D",
         "fastestLap": null,
         "currentLap": 0
       }
     ]
   },
-  "raceState": {}
+  "raceState": {
+    "active": false,
+    "mode": "Danger",
+    "flag": "CHEQUERED",
+    "startTime": 1751463643822,
+    "countdown": 600,
+    "laps": {}
+  }
 }
