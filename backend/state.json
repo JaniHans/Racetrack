@@ -1,0 +1,22 @@
+{
+  "sessions": [],
+  "drivers": {
+    "w": [
+      {
+        "name": "s",
+        "car": "Car B"
+      },
+      {
+        "name": "ddd",
+        "car": "Car C"
+      }
+    ]
+  },
+  "raceState": {
+    "active": true,
+    "mode": "Safe",
+    "flag": "GREEN",
+    "startTime": 1751039436364,
+    "countdown": 600
+  }
+}
