@@ -35,14 +35,7 @@ socket.on('raceFinished', (state) => {
     raceActive = state.active;
     // Optionally update UI based on state
     // Reload the page
-    safe.style.display = 'none';
-    stop.style.display = 'none';
-    hazard.style.display = 'none';
-    finish.style.display = 'none';
-    end.style.display = 'inline-block';
-    thisRace.removeChild(header);
-    header.innerHTML = currentSession + " race finished"
-    thisRace.appendChild(header);
+    finishRaceButtonsProcedure();
 });
 
 socket.on('modeChanged', ({ mode, flag }) => {
@@ -68,8 +61,6 @@ function updateDriverTable() {
     // Show only the first session (current/upcoming)
     const session = raceSessions[0];
 
-
-
     if (!session) {
         tableContainer.innerHTML = '<p>No upcoming session.</p>';
         return;
@@ -81,12 +72,10 @@ function updateDriverTable() {
         if (!raceActive && currentSession) {
             if (!currentSession) {
                 thisRace.innerHTML = "";
+            } else {
+                thisRace.innerHTML = "Upcoming race: " + currentSession;
+                start.style.display = 'inline-block';
             }
-            console.log(currentSession)
-            thisRace.innerHTML = "Upcoming race: " + currentSession;
-
-            start.style.display = 'inline-block';
-
         }
 
     const table = document.createElement('table');
@@ -154,14 +143,7 @@ function reportHazard() {
 function finishRace() {
 
     socket.emit('race:finish');
-    safe.style.display = 'none';
-    stop.style.display = 'none';
-    hazard.style.display = 'none';
-    finish.style.display = 'none';
-    end.style.display = 'inline-block';
-    thisRace.removeChild(header);
-    header.innerHTML = currentSession + " race finished"
-    thisRace.appendChild(header);
+    finishRaceButtonsProcedure();
 
 }
 function endSession() {
@@ -177,7 +159,16 @@ function endSession() {
     }
 
 }
-
+function finishRaceButtonsProcedure() {
+    safe.style.display = 'none';
+    stop.style.display = 'none';
+    hazard.style.display = 'none';
+    finish.style.display = 'none';
+    end.style.display = 'inline-block';
+    thisRace.removeChild(header);
+    header.innerHTML = currentSession + " race finished"
+    thisRace.appendChild(header);
+}
 
 function logout() {
     document.location.reload();
@@ -208,7 +199,13 @@ window.addEventListener('DOMContentLoaded', () => {
             raceControlKey = input.value.trim();
             modal.style.display = 'none';
             error.style.display = 'none'; // Hide error on success
-            thisRace.innerHTML = "Upcoming race: " + currentSession;
+            if (!currentSession) {
+                thisRace.innerHTML = "";
+            } else {
+                thisRace.innerHTML = "Upcoming race: " + currentSession;
+            }
+
+
 
 
             start.onclick = startRace;

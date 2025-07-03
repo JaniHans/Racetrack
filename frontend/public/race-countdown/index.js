@@ -36,9 +36,6 @@ function startTimer(state) {
        const now = Date.now();
 
        let difference = now - state.startTime;
-        console.log(now + "time now")
-        console.log(state.startTime + "start time")
-
        let timer = (state.countdown * 1000) - difference;
        let minutes = Math.floor((timer % (1000 * 60 * 60)) / (1000 * 60));
        let seconds = Math.floor((timer % (1000 * 60)) / 1000);

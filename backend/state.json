@@ -1,23 +1,23 @@
 {
-  "sessions": [],
-  "drivers": {
-    "w": [
-      {
-        "name": "s",
-        "car": "Car B"
-      },
-      {
-        "name": "ddd",
-        "car": "Car C"
-      }
-    ]
-  },
+  "sessions": [
+    "first"
+  ],
+  "drivers": {},
   "raceState": {
     "active": false,
     "mode": "Danger",
-    "flag": "RED",
-    "startTime": 1751465770935,
-    "countdown": 60,
-    "laps": {}
+    "flag": "CHEQUERED",
+    "startTime": 1751551489042,
+    "countdown": 600,
+    "laps": {
+      "Car A": 3,
+      "Car B": 4,
+      "Car C": 4,
+      "Car D": 3,
+      "Car F": 4,
+      "Car G": 3,
+      "Car H": 6,
+      "Car E": 5
+    }
   }
 }

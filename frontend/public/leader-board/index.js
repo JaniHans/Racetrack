@@ -99,41 +99,49 @@ function updateStats() {
         tableContainer.innerHTML = "";
 
         // sort times
-        const newBestTimes = sortTimes(bestTimes);
-        console.log("NEW SORTED OBJECGT " + newBestTimes)
+
+        const sortedTimes = Object.entries(bestTimes).sort((a, b ) => a[1] - b[1]);
+        console.log(sortedTimes)
         // Show only the first session (current/upcoming)
 
         const table = document.createElement('table');
         table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th><th>Fastest Lap</th><th>Current Lap</th></tr>`;
 
-        if (currentRaceDrivers[currentSession]) {
-            currentRaceDrivers[currentSession].forEach(({ name, car, fastestLap, currentLap }) => {
+        // get the list of drivers for current session
+        const sessionDrivers = currentRaceDrivers[currentSession];
+
+        if (!sessionDrivers) return ; // Exit if there are no drivers in the session
+
+        // sort drivers by best lap time (lowest first)
+        // use besttimes[car] if available , fallback to drivers own fastestlap
+        // use infinity for missing/null values to push them to the bottom
 
 
-                const row = document.createElement('tr');
+        const sortedDrivers = [...sessionDrivers].sort((a, b) => {  // <- safe copy, original stays intact
+            const timeA = bestTimes[a.car] ?? a.fastestLap ?? Infinity; // ?? returns the first value(bestTimes[a.car]) second (a.fastestlap= that is not null or undefined.
+            const timeB = bestTimes[b.car] ?? b.fastestLap ?? Infinity;
+            return timeA - timeB;
+        });
+        // loop through each driver in sorted order
+        sortedDrivers.forEach(driver => {
+            const row = document.createElement('tr');
+            // get the best lap time from bestTimes if present, otherwise from driver object
+            const bestTime = bestTimes[driver.car] ?? driver.fastestLap;
 
-                if (newBestTimes[car]) {
-                    let bestStr = newBestTimes[car] ? (newBestTimes[car] / 1000).toFixed(2) + ' s' : ' - ';
-                    row.innerHTML = `<td>${name}</td><td>${car}</td><td>${bestStr}</td><td>${metaData.raceState.laps[car]}</td>`;
-                    table.appendChild(row);
-                } else {
-                    row.innerHTML = `<td>${name}</td><td>${car}</td><td>${fastestLap}</td><td>${metaData.raceState.laps[car]}</td>`;
-                    table.appendChild(row);
-                }
+            // format lap time in seconds or show if no time available
 
-            });
-        }
+            const bestStr = bestTime !== null && bestTime !== undefined
+            ? (bestTime / 1000).toFixed(2) + 's'
+                : ' - ';
+            const currentLap = metaData?.raceState?.laps?.[driver.car] ?? '-';
+
+            // fill in the table row with driver data
+            row.innerHTML = `<td>${driver.name}</td><td>${driver.car}</td><td>${bestStr}</td><td>${currentLap}</td>`;
+            table.appendChild(row);
+        })
 
         tableContainer.appendChild(table);
     }
 
 }
 
-function sortTimes(object) {
-    const sortedCars = Object.entries(object)
-        .sort(([, a], [,b]) => a - b);
-
-    const sortedObject = Object.fromEntries(sortedCars);
-    return sortedObject;
-}
-// Call updateDriverTable on page load in case data arrives late

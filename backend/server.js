@@ -320,10 +320,13 @@ io.on('connection', (socket) => {
     }
 
     setTimeout(() => {
-      raceState.mode = 'Finish';
-      raceState.flag = 'CHEQUERED';
-      raceState.active = false;
-      io.emit('raceFinished', raceState);
+        if (raceState.active) {
+            raceState.mode = 'Finish';
+            raceState.flag = 'CHEQUERED';
+            raceState.active = false;
+            io.emit('raceFinished', raceState);
+        }
+
     }, raceState.countdown * 1000);
     io.emit('schedule:front-desk', { sessions, drivers, cars }); //
 
@@ -393,6 +396,7 @@ socket.on('session:lockin', ({ session, key }) => {
     if (key !== process.env.KEY_OBSERVER) return;
     if (!global.raceState.laps) global.raceState.laps = {};
     global.raceState.laps[car] = (global.raceState.laps[car] || 0) + 1;
+
     console.log("LAP COUNTER " + global.raceState.laps[car]);
     io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
   });
