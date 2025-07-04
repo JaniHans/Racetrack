@@ -3,21 +3,21 @@ This project provides real-time race management interfaces (admin and public) us
 
 🚀 Getting Started
 1. Install Dependencies
-npm install
+```npm install```
 
 2. Install & Authenticate Ngrok
-   1.Download Ngrok: https://ngrok.com/download
-   2.Run this command to authenticate your Ngrok client:
-   ngrok config add-authtoken YOUR_AUTH_TOKEN
+   1. Download Ngrok: https://ngrok.com/download
+   2. Run this command to authenticate your Ngrok client:
+   ```ngrok config add-authtoken YOUR_AUTH_TOKEN```
 
 
 ▶️ Running the App
-Step 1: Start the Backend Server
-npm start
-Step 2: Start the Ngrok Tunnel
-ngrok http 3000
-Ngrok will print a public URL like:
-https://abc12345.ngrok-free.app
+1. Start the Backend Server
+```npm start```
+2. Start the Ngrok Tunnel
+```ngrok http 3000```
+3. Ngrok will print a public URL like:
+ ```https://abc12345.ngrok-free.app```
 
 🌐 Accessing Interfaces
 🔹 Admin Interfaces
