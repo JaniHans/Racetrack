@@ -20,19 +20,69 @@ beachside-race-control/
 ├── README.md
 
 
-ngrok config add-authtoken 2zPgeXzTWIK34tAOXkkuQBv2QxS_djRnWgts3YFSbLDbEA51
-### ADMIN NGROK ROUTES
-https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app - Landing page
-https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/race-control/ - RACE CONTROL
-https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/front-desk/ - FRONT DESK
-https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/lap-line-tracker/ - Lap line tracker
+2. Install & Authenticate Ngrok
+   Download Ngrok: https://ngrok.com/download
 
-### PUBLIC NGROK Routes
+Run this command to authenticate your Ngrok client:
 
-https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/leader-board/ - Leaderboard
-https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/next-race/ - Next Race
-https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/race-countdown/ - Timer
-https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/race-flags/ - Race Flags
+bash
+Copy
+Edit
+ngrok config add-authtoken YOUR_AUTH_TOKEN
+Get your token from https://dashboard.ngrok.com/get-started/setup
+
+▶️ Running the App
+Step 1: Start the Backend Server
+bash
+Copy
+Edit
+npm start
+Step 2: Start the Ngrok Tunnel
+bash
+Copy
+Edit
+ngrok http 3000
+Ngrok will print a public URL like:
+
+arduino
+Copy
+Edit
+https://abc12345.ngrok-free.app
+Use this as your base URL for accessing all interfaces.
+
+🌐 Accessing Interfaces
+🔹 Admin Interfaces
+Interface	Route
+Front Desk	/front-desk/
+Race Control	/race-control/
+Lap Line Tracker	/lap-line-tracker/
+
+🔸 Public Interfaces
+Interface	Route
+Leaderboard	/leader-board/
+Next Race	/next-race/
+Countdown Timer	/race-countdown/
+Race Flags	/race-flags/
+
+Example
+If Ngrok gives you this base URL:
+
+arduino
+
+https://abc12345.ngrok-free.app
+Then you can access:
+
+https://abc12345.ngrok-free.app/front-desk/
+
+https://abc12345.ngrok-free.app/next-race/
+
+etc.
+
+🛑 Notes
+Ngrok URLs are temporary unless you're using a paid account.
+
+Every user must authenticate Ngrok with their own token.
+
 
 
 
