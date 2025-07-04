@@ -1,54 +1,23 @@
-beachside-race-control/
-├── backend/
-│   ├── server.js                 # Express + Socket.IO backend
-│   ├── state.js                  # Global race state management
-│   ├── socketHandlers.js         # All socket event logic
-│   ├── .env                      # Role keys and port
-│   └── roles.js                  # Optional role-based access keys
-├── frontend/
-│   ├── public/                   # Public access display screens
-│   │   ├── index.html            # Welcome screen or global summary
-│   │   ├── flag.html             # Displays current flag (public)
-│   │   ├── leaderboard.html      # Displays live rankings (public)
-│   │   ├── countdown.html        # Race countdown timer (public)
-│   ├── receptionist.html         # Controls for scheduling and managing races
-│   ├── safety.html               # Controls for flag updates (safety officials)
-│   └── observer.html             # Lap line observer for marking laps
-├── shared/
-│   └── events.js                 # Shared constants between frontend and backend
-├── package.json
-├── README.md
+🏁 RaceTrack Interface System
+This project provides real-time race management interfaces (admin and public) using a Node.js + Socket.IO backend and Ngrok for remote access.
 
+🚀 Getting Started
+1. Install Dependencies
+npm install
 
 2. Install & Authenticate Ngrok
-   Download Ngrok: https://ngrok.com/download
+   1.Download Ngrok: https://ngrok.com/download
+   2.Run this command to authenticate your Ngrok client:
+   ngrok config add-authtoken YOUR_AUTH_TOKEN
 
-Run this command to authenticate your Ngrok client:
-
-bash
-Copy
-Edit
-ngrok config add-authtoken YOUR_AUTH_TOKEN
-Get your token from https://dashboard.ngrok.com/get-started/setup
 
 ▶️ Running the App
 Step 1: Start the Backend Server
-bash
-Copy
-Edit
 npm start
 Step 2: Start the Ngrok Tunnel
-bash
-Copy
-Edit
 ngrok http 3000
 Ngrok will print a public URL like:
-
-arduino
-Copy
-Edit
 https://abc12345.ngrok-free.app
-Use this as your base URL for accessing all interfaces.
 
 🌐 Accessing Interfaces
 🔹 Admin Interfaces
@@ -66,24 +35,24 @@ Race Flags	/race-flags/
 
 Example
 If Ngrok gives you this base URL:
-
-arduino
-
 https://abc12345.ngrok-free.app
 Then you can access:
 
 https://abc12345.ngrok-free.app/front-desk/
 
+https://abc12345.ngrok-free.app/race-control/
+
 https://abc12345.ngrok-free.app/next-race/
 
 etc.
-
 🛑 Notes
 Ngrok URLs are temporary unless you're using a paid account.
 
 Every user must authenticate Ngrok with their own token.
 
+Do not hardcode or publish your token in the repo.
 
+Keep .env and state.json files private.
 
 
 ### BUGS
