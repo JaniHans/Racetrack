@@ -33,10 +33,9 @@ This project provides real-time race management interfaces (admin and public) us
 | Countdown Timer | `/race-countdown/` |
 | Race Flags      | `/race-flags/`     |
 
-
-Example
+<br>
 If Ngrok gives you this base URL:
-https://abc12345.ngrok-free.app
+https://abc12345.ngrok-free.app<br>
 Then you can access:
 
 https://abc12345.ngrok-free.app/front-desk/
@@ -45,7 +44,7 @@ https://abc12345.ngrok-free.app/race-control/
 
 https://abc12345.ngrok-free.app/next-race/
 
-etc.
+<br>
 🛑 Notes
 Ngrok URLs are temporary unless you're using a paid account.
 
