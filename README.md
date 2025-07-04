@@ -12,11 +12,11 @@ This project provides real-time race management interfaces (admin and public) us
 
 
 ▶️ Running the App
-1. Start the Backend Server
+1. Start the Backend Server<br>
 ```npm start```
-2. Start the Ngrok Tunnel
+2. Start the Ngrok Tunnel<br>
 ```ngrok http 3000```
-3. Ngrok will print a public URL like:
+3. Ngrok will print a public URL like:<br>
  ```https://abc12345.ngrok-free.app```
 
 | Interface        | Route                |
