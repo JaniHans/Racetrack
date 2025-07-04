@@ -19,19 +19,20 @@ This project provides real-time race management interfaces (admin and public) us
 3. Ngrok will print a public URL like:
  ```https://abc12345.ngrok-free.app```
 
-🌐 Accessing Interfaces
-🔹 Admin Interfaces
-Interface	Route
-Front Desk	/front-desk/
-Race Control	/race-control/
-Lap Line Tracker	/lap-line-tracker/
+| Interface        | Route                |
+| ---------------- | -------------------- |
+| Front Desk       | `/front-desk/`       |
+| Race Control     | `/race-control/`     |
+| Lap Line Tracker | `/lap-line-tracker/` |
 
-🔸 Public Interfaces
-Interface	Route
-Leaderboard	/leader-board/
-Next Race	/next-race/
-Countdown Timer	/race-countdown/
-Race Flags	/race-flags/
+
+| Interface       | Route              |
+| --------------- | ------------------ |
+| Leaderboard     | `/leader-board/`   |
+| Next Race       | `/next-race/`      |
+| Countdown Timer | `/race-countdown/` |
+| Race Flags      | `/race-flags/`     |
+
 
 Example
 If Ngrok gives you this base URL:
