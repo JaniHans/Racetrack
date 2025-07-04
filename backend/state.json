@@ -1,13 +1,11 @@
 {
-  "sessions": [
-    "first"
-  ],
+  "sessions": [],
   "drivers": {},
   "raceState": {
-    "active": false,
-    "mode": "Danger",
-    "flag": "CHEQUERED",
-    "startTime": 1751551489042,
+    "active": true,
+    "mode": "Safe",
+    "flag": "GREEN",
+    "startTime": 1751637599705,
     "countdown": 600,
     "laps": {
       "Car A": 3,

@@ -20,6 +20,22 @@ beachside-race-control/
 ├── README.md
 
 
+ngrok config add-authtoken 2zPgeXzTWIK34tAOXkkuQBv2QxS_djRnWgts3YFSbLDbEA51
+### ADMIN NGROK ROUTES
+https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app - Landing page
+https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/race-control/ - RACE CONTROL
+https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/front-desk/ - FRONT DESK
+https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/lap-line-tracker/ - Lap line tracker
+
+### PUBLIC NGROK Routes
+
+https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/leader-board/ - Leaderboard
+https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/next-race/ - Next Race
+https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/race-countdown/ - Timer
+https://7c8c-2a00-807-d9-bf6e-c18e-4c79-d794-cfd6.ngrok-free.app/race-flags/ - Race Flags
+
+
+
 ### BUGS
 
 sessions dont dissappear in front - desk when race started [x]
