@@ -57,15 +57,12 @@ Keep .env and state.json files private.
 
 ### BUGS
 
-sessions dont dissappear in front - desk when race started [x]
-you can remove already running session in front desk which creates bugs [x]
-if all sessions finished race control does not reload and start button does not appear again [x]
-Race Control updates upcoming sessions in all situations [x]
-On starting the server last race stays in front desk[]
-if lapline tracker page is not loaded before race start pressed then lap line buttons dont enable[]
-race control after all races finished does not display "no upcoming session" + start button is available[]
-if raceActive adding new races from front desk will dissapear the table in the leaderboard and disables buttons in lap line[]
-leaderboard if not opened before the start of the race does not display leaderboard[]
+
+1. On starting the server last race stays in front desk[]
+2. if lapline tracker page is not loaded before race start pressed then lap line buttons dont enable[]
+3. race control after all races finished does not display "no upcoming session" + start button is available[]
+4. if raceActive adding new races from front desk will dissapear the table in the leaderboard and disables buttons in lap line[]
+5. leaderboard if not opened before the start of the race does not display leaderboard[]
 
 🏁 User guide
 ## Interfaces
