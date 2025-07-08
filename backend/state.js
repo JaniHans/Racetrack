@@ -1,4 +1,4 @@
-export const raceState = {
+export let raceState = {
   active: false,
   mode : null, // "Safe", "Hazard", "Danger", "Finish"
   flag: 'GREEN', // This should be auto-synced with mode, derived from mode, for flag displays

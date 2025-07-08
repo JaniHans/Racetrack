@@ -294,7 +294,7 @@ io.on('connection', (socket) => {
 
   // Add this to your fetch:data handler
   socket.on('fetch:data', () => {
-    socket.emit('update:data', { sessions, drivers, cars });
+    socket.emit('update:data', { sessions, drivers, cars, raceActive: global.raceState?.active || false });
 
   });
 // safety control , start race
@@ -309,7 +309,7 @@ io.on('connection', (socket) => {
 
 
     raceState.countdown = isDev ? 60 : 600;
-
+    saveState();
     // 2. Remove the current session and its drivers
     const startedSession = sessions[0] || null; // Remove the first session
     if (startedSession) {

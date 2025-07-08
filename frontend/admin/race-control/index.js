@@ -180,6 +180,8 @@ socket.on('connect', () => {
 
 // Show modal and handle key entry
 window.addEventListener('DOMContentLoaded', () => {
+    console.log('------------------');
+    console.log(raceActive);
     const modal = document.getElementById('keyModal');
     const input = document.getElementById('raceControlKeyInput');
     const btn = document.getElementById('submitKeyBtn');
@@ -195,6 +197,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     socket.on('auth:race-control:result', (ok) => {
 
+
         if (ok) {
             raceControlKey = input.value.trim();
             modal.style.display = 'none';
@@ -204,9 +207,6 @@ window.addEventListener('DOMContentLoaded', () => {
             } else {
                 thisRace.innerHTML = "Upcoming race: " + currentSession;
             }
-
-
-
 
             start.onclick = startRace;
             safe.onclick = safeRace;

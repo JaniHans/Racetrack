@@ -9,13 +9,14 @@ let currentRaceDrivers = {};
 let bestTimes = {};
 let metaData = null;
 
-
 const tableContainer = document.getElementById('driverTable');
 
 socket.on('connect', () => {
     console.log('Connected to server');
 
 });
+
+socket.emit('fetch:data');
 // only update table if first session not true or if sessionEnded
 socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
@@ -46,6 +47,10 @@ socket.on('update:data', (data) => {
     drivers = data.drivers;
     cars = data.cars || cars;
     metaData = data;
+    console.log(data);
+    console.log(data.raceActive);
+    raceActive = data.raceActive;
+    // raceActive = data.raceState.active;
     if (raceActive) {
         updateStats()
     } else {
@@ -95,6 +100,7 @@ function updateDriverTable() {
 }
 function updateStats() {
     if (raceActive) {
+
         console.log("UPDATING TABLE")
         tableContainer.innerHTML = "";
 

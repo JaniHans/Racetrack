@@ -65,7 +65,7 @@ On starting the server last race stays in front desk[]
 if lapline tracker page is not loaded before race start pressed then lap line buttons dont enable[]
 race control after all races finished does not display "no upcoming session" + start button is available[]
 if raceActive adding new races from front desk will dissapear the table in the leaderboard and disables buttons in lap line[]
-
+leaderboard if not opened before the start of the race does not display leaderboard[]
 
 🏁 User guide
 ## Interfaces
