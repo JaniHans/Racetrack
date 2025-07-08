@@ -1,11 +1,28 @@
 {
-  "sessions": [],
-  "drivers": {},
+  "sessions": [
+    "fifth"
+  ],
+  "drivers": {
+    "fifth": [
+      {
+        "name": "ddererer",
+        "car": "Car A",
+        "fastestLap": null,
+        "currentLap": 0
+      },
+      {
+        "name": "asderr",
+        "car": "Car B",
+        "fastestLap": null,
+        "currentLap": 0
+      }
+    ]
+  },
   "raceState": {
     "active": false,
     "mode": "Danger",
     "flag": "RED",
-    "startTime": 1751975985128,
+    "startTime": 1751982110233,
     "countdown": 600,
     "laps": {}
   }

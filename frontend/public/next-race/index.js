@@ -11,6 +11,15 @@ socket.on('update:data', (data) => {
   updateUI();
 });
 
+socket.on('sessionEnded', (raceState) => {
+  console.log(raceState.active)
+  if (!raceState.active) {
+   proceedToThePaddock();
+  }
+});
+
+
+
 function updateUI() {
   const sessionTables = document.getElementById('sessionTables');
   sessionTables.innerHTML = '';
@@ -58,6 +67,10 @@ function updateUI() {
     sessionContainer.appendChild(table);
     sessionTables.appendChild(sessionContainer);
   });
+}
+
+function proceedToThePaddock() {
+  alert("DRIVERS PROCEED TO THE PADDOCK");
 }
 
 document.addEventListener('DOMContentLoaded', () => {
