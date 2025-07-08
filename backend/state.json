@@ -2,20 +2,11 @@
   "sessions": [],
   "drivers": {},
   "raceState": {
-    "active": true,
-    "mode": "Safe",
-    "flag": "GREEN",
-    "startTime": 1751637599705,
+    "active": false,
+    "mode": "Danger",
+    "flag": "RED",
+    "startTime": 1751975985128,
     "countdown": 600,
-    "laps": {
-      "Car A": 3,
-      "Car B": 4,
-      "Car C": 4,
-      "Car D": 3,
-      "Car F": 4,
-      "Car G": 3,
-      "Car H": 6,
-      "Car E": 5
-    }
+    "laps": {}
   }
 }

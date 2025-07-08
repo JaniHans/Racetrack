@@ -12,9 +12,9 @@ This project provides real-time race management interfaces (admin and public) us
 
 
 ▶️ Running the App
-1. Start the Backend Server<br>
+1. Start the Backend Server in your terminal<br>
 ```npm start```
-2. Start the Ngrok Tunnel<br>
+2. Start the Ngrok Tunnel from ngrok.exe.<br>
 ```ngrok http 3000```
 3. Ngrok will print a public URL like:<br>
  ```https://abc12345.ngrok-free.app```
@@ -65,3 +65,66 @@ On starting the server last race stays in front desk[]
 if lapline tracker page is not loaded before race start pressed then lap line buttons dont enable[]
 race control after all races finished does not display "no upcoming session" + start button is available[]
 if raceActive adding new races from front desk will dissapear the table in the leaderboard and disables buttons in lap line[]
+
+
+🏁 User guide
+## Interfaces
+
+# Admin Panels
+### Front Desk
+#### Persona - Receptionist 
+##### Route - /front-desk
+Enter password to unlock interface
+Enter session name and click add Session
+Manage Race Drivers 
+# enter driver name and choose race from the dropdown menu.
+Option 1 to add car or let program auto assign the car.
+Driver name has to be unique
+Red buttons : Logout and remove session
+In the table below you can remove driver from the race, edit driver name and edit car. Press save to apply changes
+
+### Race Control
+#### Persona - Safety Official
+##### Route - /race-control
+Enter password to unlock interface
+Start race will start the race and set race mode to safe. Four buttons will be available after:
+ 1. Safe - drivers continue to drive
+ 2. Stop race - red flag is waved for danger , drivers should stop driving
+ 3. Report hazard - caution for drivers , orange flag continue driving
+ 4. Finish race - chequered flag is waved , drivers have to return to the pitlane.
+ 5. After finish race is clicked end session will appear, that will remove the leaderboard stats. 
+
+### Lap-line Tracker
+#### Persona-Lap-line Observer
+##### Route - /lap-line-tracker
+Enter password to unlock interface
+Click Car A buttons to record lap times and laps simultaneously.
+
+# Public Panels
+### Leaderboard
+#### Persona-Guest
+##### Route - /leader-board
+Guest are being displayed race mode with race flags and timer. Leaderboard is sorted through ranking of fastest laps
+
+# Public Panels
+### Next Race
+#### Persona—Race Driver
+##### Route - /next-race
+
+# Public Panels
+### Race Countdown
+#### Persona—Race Driver
+##### Route - /race-countdown
+
+Timer shows time left for the race to finish
+
+# Public Panels
+### Race Flag
+#### Persona—Race Driver
+##### Route - /race-flags
+
+Shows the race mode in flags
+Green - safe to drive
+Orange - drive with caution, hazard at the road
+Red - stop driving, return to the pitlane
+Chequered - race finish, return to the pitlane
