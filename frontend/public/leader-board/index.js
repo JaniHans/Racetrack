@@ -1,7 +1,8 @@
+
 const socket = io();
 
 let currentSession = null;
-let raceActive = false;
+let raceActive;
 let raceSessions = [];
 let drivers = {};
 let cars = [];
@@ -49,8 +50,19 @@ socket.on('update:data', (data) => {
     metaData = data;
     console.log(data);
     console.log(data.raceActive);
-    raceActive = data.raceActive;
-    // raceActive = data.raceState.active;
+    raceActive = data.raceState?.active ?? false;
+    // if (data.raceState !== null && data.raceState !== undefined) {
+    //     if (data.raceState.active !== null && data.raceState.active !== undefined) {
+    //         raceActive = data.raceState.active;
+    //     } else {
+    //         raceActive = false;
+    //     }
+    //
+    // } else {
+    //     raceActive = false;
+    // }
+
+
     if (raceActive) {
         updateStats()
     } else {

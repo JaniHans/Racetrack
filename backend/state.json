@@ -1,17 +1,59 @@
 {
   "sessions": [
-    "s"
+    "first"
   ],
   "drivers": {
-    "s": []
+    "first": [
+      {
+        "name": "a",
+        "car": "Car A",
+        "fastestLap": null,
+        "currentLap": 0
+      },
+      {
+        "name": "b",
+        "car": "Car B",
+        "fastestLap": null,
+        "currentLap": 0
+      },
+      {
+        "name": "c",
+        "car": "Car C",
+        "fastestLap": null,
+        "currentLap": 0
+      },
+      {
+        "name": "d",
+        "car": "Car D",
+        "fastestLap": null,
+        "currentLap": 0
+      },
+      {
+        "name": "e",
+        "car": "Car E",
+        "fastestLap": null,
+        "currentLap": 0
+      },
+      {
+        "name": "f",
+        "car": "Car F",
+        "fastestLap": null,
+        "currentLap": 0
+      },
+      {
+        "name": "g",
+        "car": "Car G",
+        "fastestLap": null,
+        "currentLap": 0
+      }
+    ]
   },
   "raceState": {
-    "active": false,
-    "mode": "Danger",
-    "flag": "RED",
-    "startTime": 1752105726565,
-    "countdown": 600,
-    "laps": {},
-    "currentSession": null
+    "currentSession": "first",
+    "active": true,
+    "mode": "Safe",
+    "flag": "GREEN",
+    "startTime": 1752134387068,
+    "countdown": 600
   }
 }
