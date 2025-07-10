@@ -132,7 +132,7 @@ io.on('connection', (socket) => {
   console.log('Client connected');
 
   // Send initial data to the client
-  socket.emit('update:data', { sessions, drivers });
+  socket.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
 
   // Helper function to check receptionist key
   function checkReceptionistKey(key) {
@@ -299,37 +299,20 @@ io.on('connection', (socket) => {
   });
 // safety control , start race
   socket.on('race:start', () => {
-    // 1. Update the global race state
-    raceState.active = true;
-    raceState.mode = 'Safe';
-    raceState.flag = 'GREEN';
-    raceState.startTime = Date.now();
-    io.emit('raceStarted', raceState);
-    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
-
-
-    raceState.countdown = isDev ? 60 : 600;
-    saveState();
-    // 2. Remove the current session and its drivers
-    const startedSession = sessions[0] || null; // Remove the first session
+    // Move first session to raceState.currentSession
+    const startedSession = sessions[0] || null;
     if (startedSession) {
-      delete drivers[startedSession];
-       // Notify all clients
+      global.raceState.currentSession = startedSession;
+      global.raceState.active = true;
+      global.raceState.mode = 'Safe';
+      global.raceState.flag = 'GREEN';
+      global.raceState.startTime = Date.now();
+      global.raceState.countdown = isDev ? 60 : 600;
       saveState();
-      console.log(`Session started and removed: ${startedSession}`);
+      io.emit('raceStarted', global.raceState);
+      io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
+      io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
     }
-
-    setTimeout(() => {
-        if (raceState.active) {
-            raceState.mode = 'Finish';
-            raceState.flag = 'CHEQUERED';
-            raceState.active = false;
-            io.emit('raceFinished', raceState);
-        }
-
-    }, raceState.countdown * 1000);
-    io.emit('schedule:front-desk', { sessions, drivers, cars }); //
-
   });
   socket.on('race:safe', () => {
     raceState.mode = 'Safe';
@@ -360,18 +343,21 @@ io.on('connection', (socket) => {
     saveState();
   });
   socket.on('race:endSession', () => {
-    raceState.mode = 'Danger';
-    raceState.flag = 'RED';
-    raceState.laps = {};
-    sessions.shift();
-    io.emit('update:data', { sessions, drivers, cars }); //
-    // Advance to the next session, if applicable
-
-    // NOT WORKING YET
-
-    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
-    io.emit('sessionEnded', raceState); // notify clients like Next Race screen
-    saveState();
+    const endedSession = global.raceState.currentSession;
+    if (endedSession) {
+      // Remove from sessions array
+      sessions = sessions.filter(s => s !== endedSession);
+      delete drivers[endedSession];
+      global.raceState.currentSession = null;
+      global.raceState.active = false;
+      global.raceState.mode = 'Danger';
+      global.raceState.flag = 'RED';
+      global.raceState.laps = {};
+      saveState();
+      io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
+      io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
+      io.emit('sessionEnded', global.raceState);
+    }
   });
 
 

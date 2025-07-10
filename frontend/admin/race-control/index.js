@@ -51,6 +51,10 @@ socket.on('update:data', (data) => {
     raceSessions = data.sessions;
     drivers = data.drivers;
     cars = data.cars || cars;
+    if (data.raceState) {
+        raceActive = !!data.raceState.active;
+        currentSession = data.raceState.currentSession || null;
+    }
     updateDriverTable();
 });
 
@@ -58,31 +62,69 @@ function updateDriverTable() {
     const tableContainer = document.getElementById('driverTable');
     tableContainer.innerHTML = '';
 
-    // Show only the first session (current/upcoming)
-    const session = raceSessions[0];
+    let nextSession = raceSessions[0];
+    // Show next session as main heading if no current race
+    if (!currentSession) {
+        thisRace.innerHTML = nextSession
+            ? `<b>Upcoming Race:</b> ${nextSession}`
+            : 'No upcoming races';
 
-    if (!session) {
-        tableContainer.innerHTML = '<p>No upcoming session.</p>';
+        // Show Start button if there is a session
+        start.style.display = raceSessions.length ? 'inline-block' : 'none';
+        safe.style.display = 'none';
+        stop.style.display = 'none';
+        hazard.style.display = 'none';
+        finish.style.display = 'none';
+        end.style.display = 'none';
+
+        // Show table of drivers for the upcoming session
+        if (nextSession && drivers[nextSession]) {
+            const table = document.createElement('table');
+            table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th></tr>`;
+            drivers[nextSession].forEach(({ name, car }) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${name}</td><td>${car}</td>`;
+                table.appendChild(row);
+            });
+            tableContainer.appendChild(table);
+        }
         return;
     } else {
-        currentSession = session;
-        upcomingRaceContainer.style.display = 'block';
-        upcomingRace.innerHTML = currentSession;
+        thisRace.innerHTML = "Current Race : " + currentSession;
+        upcomingRace.innerHTML = raceSessions[0] === currentSession ? (raceSessions[1] || 'No upcoming races') : (raceSessions[0] || 'No upcoming races');
+        upcomingRace.style.display = 'block';
     }
-        if (!raceActive && currentSession) {
-            if (!currentSession) {
-                thisRace.innerHTML = "";
-            } else {
-                thisRace.innerHTML = "Upcoming race: " + currentSession;
-                start.style.display = 'inline-block';
-            }
-        }
 
+    // Show/hide buttons based on raceActive
+    if (raceActive && currentSession) {
+        start.style.display = 'none';
+        safe.style.display = 'inline-block';
+        stop.style.display = 'inline-block';
+        hazard.style.display = 'inline-block';
+        finish.style.display = 'inline-block';
+        end.style.display = 'none';
+    } else if (!raceActive && currentSession) {
+        start.style.display = 'none';
+        safe.style.display = 'inline-block';
+        stop.style.display = 'inline-block';
+        hazard.style.display = 'inline-block';
+        finish.style.display = 'inline-block';
+        end.style.display = 'none';
+    } else {
+        start.style.display = raceSessions.length ? 'inline-block' : 'none';
+        safe.style.display = 'none';
+        stop.style.display = 'none';
+        hazard.style.display = 'none';
+        finish.style.display = 'none';
+        end.style.display = 'none';
+    }
+
+    // Show driver table for current session
     const table = document.createElement('table');
     table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th></tr>`;
 
-    if (drivers[session]) {
-        drivers[session].forEach(({ name, car }) => {
+    if (drivers[currentSession]) {
+        drivers[currentSession].forEach(({ name, car }) => {
             const row = document.createElement('tr');
             row.innerHTML = `<td>${name}</td><td>${car}</td>`;
             table.appendChild(row);
@@ -90,9 +132,6 @@ function updateDriverTable() {
     }
 
     tableContainer.appendChild(table);
-    if (raceActive) {
-        tableContainer.style.display = 'none';
-    }
 }
 
 // Call updateDriverTable on page load in case data arrives late
@@ -102,29 +141,7 @@ let raceControlKey = null;
 
 
 function startRace() {
-
-    currentSession = raceSessions.shift();
-    upcomingRaceContainer.style.display = 'none';
-
-    if (!currentSession) {
-
-        start.style.display = 'none';
-        return;
-    } else {
-        thisRace.innerHTML = "";
-        header.innerHTML = "Current Race : " + currentSession;
-        thisRace.appendChild(header);
-    }
-
-    start.style.display = 'none';
-    raceActive = true;
     socket.emit('race:start');
-
-    safe.style.display = 'inline-block';
-    stop.style.display = 'inline-block';
-    hazard.style.display = 'inline-block';
-    finish.style.display = 'inline-block';
-
 }
 
 function safeRace() {
@@ -196,17 +213,10 @@ window.addEventListener('DOMContentLoaded', () => {
     input.onkeydown = (e) => { if (e.key === 'Enter') tryKey(); };
 
     socket.on('auth:race-control:result', (ok) => {
-
-
         if (ok) {
             raceControlKey = input.value.trim();
             modal.style.display = 'none';
-            error.style.display = 'none'; // Hide error on success
-            if (!currentSession) {
-                thisRace.innerHTML = "";
-            } else {
-                thisRace.innerHTML = "Upcoming race: " + currentSession;
-            }
+            error.style.display = 'none';
 
             start.onclick = startRace;
             safe.onclick = safeRace;
@@ -216,8 +226,10 @@ window.addEventListener('DOMContentLoaded', () => {
             end.onclick = endSession;
             logoutBtn.onclick = logout;
 
+            updateDriverTable();
+
         } else {
-            error.style.display = 'block'; // <-- This will show the error!
+            error.style.display = 'block';
             input.value = '';
         }
     });
