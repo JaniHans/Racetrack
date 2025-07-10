@@ -27,18 +27,6 @@
         "car": "Car D",
         "fastestLap": null,
         "currentLap": 0
-      },
-      {
-        "name": "e",
-        "car": "Car E",
-        "fastestLap": null,
-        "currentLap": 0
-      },
-      {
-        "name": "f",
-        "car": "Car F",
-        "fastestLap": null,
-        "currentLap": 0
       }
     ]
   },
@@ -46,7 +34,7 @@
     "active": true,
     "mode": "Safe",
     "flag": "GREEN",
-    "startTime": 1752141300856,
+    "startTime": 1752164611621,
     "countdown": 60,
     "laps": {},
     "currentSession": "first"

@@ -21,7 +21,7 @@ socket.emit('fetch:data');
 // only update table if first session not true or if sessionEnded
 socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
-    raceActive = state.raceState?.active ?? false;
+    raceActive = state?.active ?? false;
     console.log(raceActive)
     // Optionally update UI based on state
     // Update upcoming race
@@ -53,8 +53,9 @@ socket.on('update:data', (data) => {
     cars = data.cars || cars;
     metaData = data;
     console.log(data);
+
+    raceActive = data.raceState?.active ?? false;
     console.log(raceActive)
-    raceActive = data.raceActive?.active ?? false;
     if (raceActive) {
         updateStats()
     } else {

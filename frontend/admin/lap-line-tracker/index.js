@@ -9,11 +9,13 @@ let bestLapTimes = {};  // car -> ms
 let raceStartTime = null;
 
 socket.emit('best:LapTimes', {bestLapTimes});
+
 window.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('keyModal');
   const input = document.getElementById('observerKeyInput');
   const submitKeyButton = document.getElementById('submitKeyBtn');
   const error = document.getElementById('keyError');
+  socket.emit('fetch:data');
 
   function tryKey() {
     const key = input.value.trim();
@@ -34,12 +36,19 @@ window.addEventListener('DOMContentLoaded', () => {
       input.value = '';
     }
   });
+
+
+
 });
 
+// Listen for car data
 // Listen for car data
 socket.on('update:data', (data) => {
   cars = data.cars || [];
   lapCounts = {};
+  console.log(data)
+  console.log(data.raceState)
+  console.log(data.raceState.laps)
   if (data.raceState && data.raceState.laps) {
     lapCounts = data.raceState.laps;
   }
@@ -54,8 +63,11 @@ socket.on('update:data', (data) => {
   updateLapCounts();
 });
 
+
 // Race state
 socket.on('raceStarted', (state) => {
+  console.log("RACE STARTED")
+  console.log(state);
   raceActive = true;
   raceStartTime = state.startTime || Date.now();
   // Load best lap times from backend
