@@ -21,7 +21,8 @@ socket.emit('fetch:data');
 // only update table if first session not true or if sessionEnded
 socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
-    raceActive = state.active;
+    raceActive = state.raceState?.active ?? false;
+    console.log(raceActive)
     // Optionally update UI based on state
     // Update upcoming race
 });
@@ -29,11 +30,14 @@ socket.on('raceFinished', (state) => {
     console.log('Race has finished:', state);
     // Optionally update UI based on state
     // Reload the page
+    raceActive = state.raceState?.active ?? false;
+    console.log(raceActive)
 });
 
 socket.on('sessionEnded', (state) => {
     console.log("Session ended")
     raceActive = state.active;
+    console.log(raceActive)
 
 })
 
@@ -49,20 +53,8 @@ socket.on('update:data', (data) => {
     cars = data.cars || cars;
     metaData = data;
     console.log(data);
-    console.log(data.raceActive);
-    raceActive = data.raceState?.active ?? false;
-    // if (data.raceState !== null && data.raceState !== undefined) {
-    //     if (data.raceState.active !== null && data.raceState.active !== undefined) {
-    //         raceActive = data.raceState.active;
-    //     } else {
-    //         raceActive = false;
-    //     }
-    //
-    // } else {
-    //     raceActive = false;
-    // }
-
-
+    console.log(raceActive)
+    raceActive = data.raceActive?.active ?? false;
     if (raceActive) {
         updateStats()
     } else {

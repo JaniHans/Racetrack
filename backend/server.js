@@ -309,10 +309,22 @@ io.on('connection', (socket) => {
       global.raceState.startTime = Date.now();
       global.raceState.countdown = isDev ? 60 : 600;
       saveState();
+
+
+
       io.emit('raceStarted', global.raceState);
       io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
       io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
     }
+    // ADDED TIMEOUT
+    setTimeout(() => {
+      raceState.mode = 'Finish';
+      raceState.flag = 'CHEQUERED';
+      raceState.active = false;
+      io.emit('raceFinished', raceState);
+    }, raceState.countdown * 1000);
+
+
   });
   socket.on('race:safe', () => {
     raceState.mode = 'Safe';

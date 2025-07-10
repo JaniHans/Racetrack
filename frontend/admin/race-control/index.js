@@ -1,7 +1,7 @@
 const socket = io();
 
 let currentSession = null;
-let raceActive = false;
+let raceActive;
 let raceSessions = [];
 let drivers = {};
 let cars = [];
@@ -26,13 +26,16 @@ socket.on('connect', () => {
 socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
     raceActive = state.active;
+    console.log(state);
     console.log(raceActive + " Race has started")
     // Optionally update UI based on state
     // Update upcoming race
 });
 socket.on('raceFinished', (state) => {
     console.log('Race has finished:', state);
+    console.log(state);
     raceActive = state.active;
+    console.log(raceActive)
     // Optionally update UI based on state
     // Reload the page
     finishRaceButtonsProcedure();
@@ -197,7 +200,7 @@ socket.on('connect', () => {
 
 // Show modal and handle key entry
 window.addEventListener('DOMContentLoaded', () => {
-    console.log('------------------');
+    console.log('------------------LOADING PAGE');
     console.log(raceActive);
     const modal = document.getElementById('keyModal');
     const input = document.getElementById('raceControlKeyInput');

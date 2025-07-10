@@ -1,7 +1,7 @@
 const socket = io();
 
 let timerInterval = null;
-let raceActive = null;
+
 
 const timerContainer = document.getElementById('time');
 
