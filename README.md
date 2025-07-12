@@ -20,24 +20,24 @@ This project provides real-time race management interfaces (admin and public) us
     ```https://abc12345.ngrok-free.app```    
    5. Click on the link to access main page  
 
-Concatenate the below found routes to your ngrok website or use the main menu site  
+Concatenate the below found routes to your ngrok website or use the main menu  
 
-| Interface        | Route                |
-| ---------------- | -------------------- |
-| Front Desk       | `/front-desk/`       |
-| Race Control     | `/race-control/`     |
-| Lap Line Tracker | `/lap-line-tracker/` |
+| Interface        | Route              |
+| ---------------- | ------------------ |
+| Front Desk       | `/front-desk`      |
+| Race Control     | `/race-control`    |
+| Lap Line Tracker | `/lap-line-tracker` |
 
 
-| Interface       | Route              |
-| --------------- | ------------------ |
-| Leaderboard     | `/leader-board/`   |
-| Next Race       | `/next-race/`      |
-| Countdown Timer | `/race-countdown/` |
-| Race Flags      | `/race-flags/`     |
+| Interface       | Route           |
+| --------------- | --------------- |
+| Leaderboard     | `/leader-board` |
+| Next Race       | `/next-race`    |
+| Countdown Timer | `/race-countdown` |
+| Race Flags      | `/race-flags`   |
 
 <br></br>
-## Example
+<span style="color: red">Example</span>
 If Ngrok provides you with the following URL:
 https://abc12345.ngrok-free.app<br>
 Then you can access:
@@ -52,12 +52,14 @@ https://abc12345.ngrok-free.app/next-race/
 ## Interfaces
 
 ### Admin Panels
-### Front Desk
-#### Persona - Receptionist 
-##### Route - /front-desk
+### <span style="color: green">Front Desk</span>
+#### Persona - Receptionist
 Enter password to unlock interface
 <br>
-Type session name and click **Add Session** session button
+### ADD/REMOVE Sessions
+1. Type session name(must be unique) and click **Add Session** button  
+    - follow to update drivers details.  
+2. Remove session from the red button  
 <br></br>
 ### ADD/EDIT/REMOVE Drivers
 Type driver name and choose race from the dropdown menu.
