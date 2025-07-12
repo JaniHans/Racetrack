@@ -90,17 +90,18 @@ Clicking on the assigned Car button to record lap completed with lap time.
 ## <span style="color: green">Leaderboard</span>
 #### Persona-Guest
 
-Guests are being displayed in race mode with race flags and timer. Leaderboard is sorted through ranking of fastest laps
+Leaderboard with time left, race flag and ranking.
 
 ## <span style="color: green">Next Race</span>
 #### Persona—Race Driver
-
+Switches to the subsequent race, once the current race is safe to start.  
+Display shows the drivers names, and the cars they're assigned to.  
+When the race session is ended, the Next Race display shows an additional message to proceed to the paddock.  
 ## <span style="color: green">Race Countdown</span>
 #### Persona—Race Driver
 
-Timer shows time left for the race to finish
+The Timer shows time left for the race to finish
 
-# Public Panels
 ## <span style="color: green">Race Flags</span>
 #### Persona—Race Driver
 
