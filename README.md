@@ -106,7 +106,8 @@ The Timer shows time left for the race to finish
 #### Persona—Race Driver
 
 Shows the race mode in flags  
-Green - safe to drive  
-Orange - drive with caution, hazard at the road  
-Red - stop driving, return to the pitlane  
+
+<span style="color: green">Green</span>  - safe to drive  
+<span style="color: orange">Orange</span>  - drive with caution, hazard at the road  
+<span style="color: red">Red</span>  - stop driving, return to the pitlane  
 Chequered - race finish, return to the pitlane  
