@@ -37,7 +37,7 @@ Concatenate the below found routes to your ngrok website or use the main menu
 | Race Flags      | `/race-flags`   |
 
 <br></br>
-<span style="color: red">Example</span>  
+<span style="color: red">Example:</span>  
 If Ngrok provides you with the following URL:
 https://abc12345.ngrok-free.app<br>
 Then you can access:
@@ -74,11 +74,12 @@ Type driver name and choose race from the dropdown menu.
 
 Enter password to unlock interface
 Start race will start the race and set race mode to safe. Four buttons will be available after:
- 1. <span style="color: green">Safe</span> - drivers continue to drive, safe mode with green flag
- 2. <span style="color: red">Stop Race</span> - drivers should stop driving, red flag is waved for danger
- 3. <span style="color: orange">Report Hazard</span>  - caution hazard on the road, orange flag, drivers continue driving
- 4. <span style="color: red">Finish Race</span> - race finished, chequered flag is waved
- 5. <span style="color: red">End Session</span> after race finished end session will appear, that will remove the leaderboard stats. 
+ 1. <span style="color: green">Safe</span>-drivers continue to drive, safe mode with green flag
+ 2. <span style="color: red">Stop Race</span>-drivers should stop driving, red flag is waved for danger
+ 3. <span style="color: orange">Report Hazard</span>-caution hazard on the road, orange flag, drivers continue driving
+ 4. <span style="color: red">Finish Race</span>-race finished, chequered flag is waved
+ 5. End Session—after the race finished, safety officials must end the session to proceed to the next race.  
+
 
 ## <span style="color: green">Lap Line Tracker</span>
 #### Persona-Lap-line Observer
