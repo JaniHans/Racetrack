@@ -13,11 +13,25 @@ This project provides real-time race management interfaces (admin and public) us
 3. ▶️ Running the App
    1. Start the Backend Server in your terminal  
    ```npm start``` - 600 seconds race time OR  ```npm run dev``` - for 60 seconds race time   
-   2. Start the Ngrok Tunnel (terminal) from ngrok.exe.  
+   2. After state.json file is created in your backend folder paste the following  
+      ```{
+      "sessions": [],
+      "drivers": {},
+      "raceState": {
+      "active": false,
+      "mode": null,
+      "flag": null,
+      "startTime": 1752328206371,
+      "countdown": 60,
+      "laps": {},
+      "currentSession": null
+      }
+      }```
+   3. Start the Ngrok Tunnel (terminal) from ngrok.exe.  
    ```ngrok http 3000```  
-   3. Ngrok will print a public URL like:  
+   4. Ngrok will print a public URL like:  
     ```https://abc12345.ngrok-free.app```    
-   4. Click on the link to access main page  
+   5. Click on the link to access main page  
 
 Concatenate the below found routes to your ngrok website or use the main menu  
 
