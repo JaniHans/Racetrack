@@ -59,6 +59,7 @@ socket.on('update:data', (data) => {
     lapTimestamps = { ...data.raceState.lapTimestamps };
   }
   raceActive = !!(data.raceState && data.raceState.active);
+  console.log("From data center" + raceActive)
   updateLapButtons();
   updateLapCounts();
 });
@@ -103,10 +104,15 @@ socket.on('sessionEnded', () => {
 function updateLapButtons() {
   const container = document.getElementById('lapButtons');
   container.innerHTML = '';
+  console.log(cars);
+  if (cars.length === 0) {
+    return;
+  }
   cars.forEach(car => {
     const lapButton = document.createElement('button');
     lapButton.className = 'lap-btn';
     lapButton.textContent = car;
+    console.log(!raceActive)
     lapButton.disabled = !raceActive;
     lapButton.onclick = () => {
       const now = Date.now();

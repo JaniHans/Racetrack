@@ -161,13 +161,13 @@ io.on('connection', (socket) => {
   });
 
   // Handle adding a new session
-  socket.on('session:add', ({ newSessionName, key }) => {
+  socket.on('session:add', ({ newSessionName, key,  }) => {
     if (!checkReceptionistKey(key)) return;
 
     if (!sessions.includes(newSessionName)) {
       sessions.push(newSessionName);
       drivers[newSessionName] = []; // Initialize an empty driver list for the session
-      io.emit('update:data', { sessions, drivers });
+      io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
       saveState();
       console.log(`Session added: ${newSessionName}`);
     } else {
@@ -205,7 +205,7 @@ io.on('connection', (socket) => {
 
       drivers[session].push({ name, car: assignedCar, fastestLap, currentLap});
       console.log(drivers[session]);
-      io.emit('update:data', { sessions, drivers, cars, fastestLap, currentLap });
+      io.emit('update:data', { sessions, drivers, cars, fastestLap, currentLap, raceState: global.raceState });
       saveState();
       console.log(`Driver added: ${name} to session: ${session}, assigned car: ${assignedCar}, fastest lap time ${fastestLap} and current lap time ${currentLap}`);
     } else {
@@ -220,7 +220,7 @@ io.on('connection', (socket) => {
     if (sessions.includes(session)) {
       sessions = sessions.filter((s) => s !== session);
       delete drivers[session];
-      io.emit('update:data', { sessions, drivers });
+      io.emit('update:data', { sessions, drivers, raceState: global.raceState });
       saveState();
       console.log(`Session removed: ${session}`);
     } else {
@@ -236,7 +236,7 @@ io.on('connection', (socket) => {
 
     if (sessions.includes(session) && drivers[session]?.find((driver) => driver.name === safeName)) {
       drivers[session] = drivers[session].filter((driver) => driver.name !== safeName);
-      io.emit('update:data', { sessions, drivers });
+      io.emit('update:data', { sessions, drivers, raceState: global.raceState });
       saveState();
       console.log(`Driver removed: ${safeName} from session: ${session}`);
     } else {
@@ -259,7 +259,7 @@ io.on('connection', (socket) => {
       drivers[session] = drivers[session].map((driver) =>
         driver.name === safeOldName ? { ...driver, name: safeNewName } : driver
       );
-      io.emit('update:data', { sessions, drivers });
+      io.emit('update:data', { sessions, drivers, raceState: global.raceState });
       saveState();
       console.log(`Driver edited: ${safeOldName} to ${safeNewName} in session: ${session}`);
     } else {
@@ -287,14 +287,14 @@ io.on('connection', (socket) => {
       return;
     }
     driver.car = car;
-    io.emit('update:data', { sessions, drivers, cars });
+    io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
     saveState();
     console.log(`Driver car updated: ${name} in session: ${session}, new car: ${car}`);
   });
 
   // Add this to your fetch:data handler
   socket.on('fetch:data', () => {
-    socket.emit('update:data', { sessions, drivers, cars, raceActive: global.raceState?.active || false });
+    socket.emit('update:data', { sessions, drivers, cars, raceState: global.raceState, raceActive: global.raceState?.active || false });
 
   });
 // safety control , start race
@@ -318,10 +318,14 @@ io.on('connection', (socket) => {
     }
     // ADDED TIMEOUT
     setTimeout(() => {
-      raceState.mode = 'Finish';
-      raceState.flag = 'CHEQUERED';
-      raceState.active = false;
-      io.emit('raceFinished', raceState);
+      if (raceState.active) {
+        raceState.mode = 'Finish';
+        raceState.flag = 'CHEQUERED';
+        raceState.active = false;
+        io.emit('raceFinished', raceState);
+      }
+
+
     }, raceState.countdown * 1000);
 
 

@@ -3,6 +3,7 @@ const socket = io();
 let raceSessions = [];
 let drivers = {};
 let cars = [];
+let raceActive = null;
 
 // Add at the top
 let receptionistKey = null;
@@ -14,10 +15,11 @@ socket.on('update:data', (data) => {
   drivers = data.drivers;
   cars = data.cars || cars; // fallback if not sent
   console.log("UPDATING DATA")
-  console.log(data);
-  console.log(data.ignoreReceptionist);
+  console.log(data)
+  raceActive = data.raceState.active;
+  console.log(raceActive)
   let ignoreUpdateFromLapLineTracker= data?.ignoreReceptionist ?? false;
-  console.log(ignoreUpdateFromLapLineTracker);
+  console.log("Ignore lapline " + ignoreUpdateFromLapLineTracker);
   if (!ignoreUpdateFromLapLineTracker) {
     updateUI();
   }
@@ -51,7 +53,17 @@ function updateUI() {
   sessionTables.innerHTML = '';
   console.log(raceSessions)
 
+  if (raceActive) {
+    raceSessions.shift();
+  }
+
   raceSessions.forEach((session) => {
+
+    // counter++;
+    // if (raceActive && counter === 1) {
+    //   return;
+    // }
+
     // Populate session select dropdown
     const option = document.createElement('option');
     option.value = session;
