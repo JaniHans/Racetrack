@@ -12,13 +12,12 @@ This project provides real-time race management interfaces (admin and public) us
 <br></br>
 3. ▶️ Running the App
    1. Start the Backend Server in your terminal  
-   ```npm start``` - 600 seconds race time  
-   2. ```npm run dev``` - for 60 seconds race time  
-   3. Start the Ngrok Tunnel (terminal) from ngrok.exe.  
+   ```npm start``` - 600 seconds race time OR  ```npm run dev``` - for 60 seconds race time   
+   2. Start the Ngrok Tunnel (terminal) from ngrok.exe.  
    ```ngrok http 3000```  
-   4. Ngrok will print a public URL like:  
+   3. Ngrok will print a public URL like:  
     ```https://abc12345.ngrok-free.app```    
-   5. Click on the link to access main page  
+   4. Click on the link to access main page  
 
 Concatenate the below found routes to your ngrok website or use the main menu  
 
