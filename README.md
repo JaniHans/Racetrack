@@ -14,7 +14,8 @@ This project provides real-time race management interfaces (admin and public) us
    1. Start the Backend Server in your terminal  
    ```npm start``` - 600 seconds race time OR  ```npm run dev``` - for 60 seconds race time   
    2. After state.json file is created in your backend folder paste the following  
-      ```{
+      ```
+      {
       "sessions": [],
       "drivers": {},
       "raceState": {
