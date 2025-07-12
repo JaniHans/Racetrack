@@ -52,7 +52,7 @@ https://abc12345.ngrok-free.app/next-race/
 ## Interfaces
 
 ### Admin Panels
-### <span style="color: green">Front Desk</span>
+## <span style="color: green">Front Desk</span>
 #### Persona - Receptionist
 Enter password to unlock interface
 <br>
@@ -60,7 +60,7 @@ Enter password to unlock interface
 1. Type session name(must be unique) and click **Add Session** button  
     - follow to update drivers details.  
 2. Remove session from the red button  
-<br></br>
+
 ### ADD/EDIT/REMOVE Drivers
 Type driver name and choose race from the dropdown menu.
 
@@ -69,7 +69,7 @@ Type driver name and choose race from the dropdown menu.
 3. In the session table you can edit car and drivers and remove drivers. 
 4. Press save to apply changes
 
-### Race Control
+## <span style="color: green">Race Control</span>
 #### Persona—Safety Official
 
 Enter password to unlock interface
@@ -80,28 +80,28 @@ Start race will start the race and set race mode to safe. Four buttons will be a
  4. <span style="color: red">Finish Race</span> - race finished, chequered flag is waved
  5. <span style="color: red">End Session</span> after race finished end session will appear, that will remove the leaderboard stats. 
 
-### Lap-line Tracker
+## <span style="color: green">Lap Line Tracker</span>
 #### Persona-Lap-line Observer
 
 Enter password to unlock interface   
 Clicking on the assigned Car button to record lap completed with lap time.
 
 # Public Panels
-### Leaderboard
+## <span style="color: green">Leaderboard</span>
 #### Persona-Guest
 
 Guests are being displayed in race mode with race flags and timer. Leaderboard is sorted through ranking of fastest laps
 
-### Next Race
+## <span style="color: green">Next Race</span>
 #### Persona—Race Driver
 
-### Race Countdown
+## <span style="color: green">Race Countdown</span>
 #### Persona—Race Driver
 
 Timer shows time left for the race to finish
 
 # Public Panels
-### Race Flags
+## <span style="color: green">Race Flags</span>
 #### Persona—Race Driver
 
 Shows the race mode in flags  
