@@ -37,7 +37,7 @@ Concatenate the below found routes to your ngrok website or use the main menu
 | Race Flags      | `/race-flags`   |
 
 <br></br>
-<span style="color: red">Example</span>
+<span style="color: red">Example</span>  
 If Ngrok provides you with the following URL:
 https://abc12345.ngrok-free.app<br>
 Then you can access:
