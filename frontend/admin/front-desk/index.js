@@ -13,7 +13,15 @@ socket.on('update:data', (data) => {
   raceSessions = data.sessions;
   drivers = data.drivers;
   cars = data.cars || cars; // fallback if not sent
-  updateUI();
+  console.log("UPDATING DATA")
+  console.log(data);
+  console.log(data.ignoreReceptionist);
+  let ignoreUpdateFromLapLineTracker= data?.ignoreReceptionist ?? false;
+  console.log(ignoreUpdateFromLapLineTracker);
+  if (!ignoreUpdateFromLapLineTracker) {
+    updateUI();
+  }
+
 });
 
 socket.on('raceStarted', (state) => {
@@ -25,8 +33,12 @@ socket.on('raceStarted', (state) => {
 
 function removeRunningRace() {
   const container = document.getElementById("sessionTables");
+  console.log(container)
+
   const firstChildDiv = container.querySelector("div");
+  console.log(firstChildDiv)
   if (firstChildDiv) {
+    console.log("Removing current session")
     container.removeChild(firstChildDiv);
   }
 }
@@ -37,6 +49,7 @@ function updateUI() {
 
   sessionSelect.innerHTML = '';
   sessionTables.innerHTML = '';
+  console.log(raceSessions)
 
   raceSessions.forEach((session) => {
     // Populate session select dropdown
@@ -272,6 +285,7 @@ function addRaceSession() {
 
 function removeRaceSession(session) {
   if (session) {
+
     socket.emit('session:remove', { session, key: receptionistKey });
   }
 }

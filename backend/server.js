@@ -310,11 +310,11 @@ io.on('connection', (socket) => {
       global.raceState.countdown = isDev ? 60 : 600;
       saveState();
 
-
+      const ignoreReceptionist = true;
 
       io.emit('raceStarted', global.raceState);
       io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
-      io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
+      io.emit('update:data', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState });
     }
     // ADDED TIMEOUT
     setTimeout(() => {
@@ -394,9 +394,10 @@ socket.on('session:lockin', ({ session, key }) => {
     if (key !== process.env.KEY_OBSERVER) return;
     if (!global.raceState.laps) global.raceState.laps = {};
     global.raceState.laps[car] = (global.raceState.laps[car] || 0) + 1;
+    const ignoreReceptionist = true;
 
     console.log("LAP COUNTER " + global.raceState.laps[car]);
-    io.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
+    io.emit('update:data', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState });
   });
 });
 // Start

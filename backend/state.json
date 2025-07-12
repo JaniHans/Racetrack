@@ -1,9 +1,9 @@
 {
   "sessions": [
-    "first"
+    "third"
   ],
   "drivers": {
-    "first": [
+    "third": [
       {
         "name": "a",
         "car": "Car A",
@@ -11,20 +11,8 @@
         "currentLap": 0
       },
       {
-        "name": "b",
-        "car": "Car B",
-        "fastestLap": null,
-        "currentLap": 0
-      },
-      {
-        "name": "c",
-        "car": "Car C",
-        "fastestLap": null,
-        "currentLap": 0
-      },
-      {
         "name": "d",
-        "car": "Car D",
+        "car": "Car B",
         "fastestLap": null,
         "currentLap": 0
       }
@@ -34,9 +22,9 @@
     "active": true,
     "mode": "Safe",
     "flag": "GREEN",
-    "startTime": 1752164611621,
+    "startTime": 1752318548264,
     "countdown": 60,
     "laps": {},
-    "currentSession": "first"
+    "currentSession": "third"
   }
 }
