@@ -1,5 +1,4 @@
-🏁 RaceTrack Interface System
-<br>
+# 🏁 RaceTrack Interface System
 This project provides real-time race management interfaces (admin and public) using a Node.js + Socket.IO backend, Javascript for frontend and Ngrok for remote access.
 
 🚀 Getting Started
@@ -13,16 +12,15 @@ This project provides real-time race management interfaces (admin and public) us
 
 
 ▶️ Running the App
-1. Start the Backend Server in your terminal<br>
-```npm start``` for 600 seconds race time OR
-   <br>
-   ```npm run dev``` for 60 seconds race time
-2. Start the Ngrok Tunnel (terminal) from ngrok.exe.<br>
+1. Start the Backend Server in your terminal
+```npm start``` for 600 seconds race time OR ```npm run dev``` for 60 seconds race time  
+2. Start the Ngrok Tunnel (terminal) from ngrok.exe.  
 ```ngrok http 3000```
-3. Ngrok will print a public URL like:<br>
+3. Ngrok will print a public URL like:  
  ```https://abc12345.ngrok-free.app```
-4. Click on the link to access main page
-5. Concatenate the below found routes to your ngrok website or use the main menu site
+4. Click on the link to access main page  
+5. Concatenate the below found routes to your ngrok website or use the main menu site  
+
 | Interface        | Route                |
 | ---------------- | -------------------- |
 | Front Desk       | `/front-desk/`       |
@@ -38,7 +36,7 @@ This project provides real-time race management interfaces (admin and public) us
 | Race Flags      | `/race-flags/`     |
 
 <br>
-If Ngrok gives you this base URL:
+If Ngrok provides you with the following URL:
 https://abc12345.ngrok-free.app<br>
 Then you can access:
 
@@ -50,7 +48,7 @@ https://abc12345.ngrok-free.app/next-race/
 
 <br>
 
-🏁 User guide
+# 🏁 User guide
 ## Interfaces
 
 # Admin Panels
