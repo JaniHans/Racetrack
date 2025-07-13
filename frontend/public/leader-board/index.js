@@ -11,6 +11,7 @@ let bestTimes = {};
 let metaData = null;
 
 const tableContainer = document.getElementById('driverTable');
+const thisRace = document.getElementById('this-race');
 
 socket.on('connect', () => {
     console.log('Connected to server');
@@ -46,6 +47,12 @@ socket.on('modeChanged', ({ mode, flag }) => {
     // Optionally update button text or flag screen
 });
 
+socket.on('receive:current-session', (currentRace) => {
+    currentSession = currentRace;
+
+})
+
+
 socket.on('update:data', (data) => {
     console.log("What is the order of your calls")
     raceSessions = data.sessions;
@@ -80,12 +87,24 @@ function updateDriverTable() {
         console.log("CREATING TABLE")
         tableContainer.innerHTML = "";
 
-        const session = raceSessions[0]
+        let session = raceSessions[0]
         // Show only the first session (current/upcoming)
 
         currentSession = session;
 
 
+
+        // Show next session as main heading if no current race
+        if (!currentSession) {
+            thisRace.innerHTML = session
+                ? `<b>Upcoming Race:</b> ${session}`
+                : 'No upcoming races';
+        } else {
+            if (raceActive) {
+                thisRace.innerHTML = "Current Race : " + currentSession;
+            }
+            thisRace.innerHTML = "Upcoming Race : " + currentSession;
+        }
         const table = document.createElement('table');
         table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th><th>Fastest Lap</th><th>Current Lap</th></tr>`;
 
@@ -108,7 +127,7 @@ function updateStats() {
 
         console.log("UPDATING TABLE")
         tableContainer.innerHTML = "";
-
+        thisRace.innerHTML = "Current Race : " + currentSession;
         // sort times
 
         const sortedTimes = Object.entries(bestTimes).sort((a, b ) => a[1] - b[1]);
