@@ -13,7 +13,7 @@ This project provides real-time race management interfaces (admin and public) us
 3. ▶️ Running the App
    1. Start the Backend Server in your terminal  
    ```npm start``` - 600 seconds race time OR  ```npm run dev``` - for 60 seconds race time   
-   2. On first run of the program once the state.json file is created in your backend folder paste the following to your state.json file
+   2. Before you open all the interfaces please paste the following to your state.json(path backend folder) file
       ```
       {
       "sessions": [],
@@ -32,9 +32,9 @@ This project provides real-time race management interfaces (admin and public) us
    ```ngrok http 3000```  
    4. Ngrok will print a public URL like:  
     ```https://abc12345.ngrok-free.app```    
-   5. Click on the link to access main page  
+   5. Click on the link to access main menu 
 
-Concatenate the below found routes to your ngrok website or use the main menu  
+Concatenate the below found routes to your ngrok website or use the main menu interface
 
 | Interface        | Route              |
 | ---------------- | ------------------ |
@@ -67,13 +67,13 @@ https://abc12345.ngrok-free.app/next-race/
 
 ### Admin Panels
 ## <span style="color: green">Front Desk</span>
-#### Persona - Receptionist
+#### Persona—Receptionist
 Enter password to unlock interface
 <br>
 ### ADD/REMOVE Sessions
 1. Type session name(must be unique) and click **Add Session** button  
     - follow to update drivers details.  
-2. Remove session from the red button  
+2. Remove session using the red button  
 
 ### ADD/EDIT/REMOVE Drivers
 Type driver name and choose race from the dropdown menu.
@@ -86,11 +86,11 @@ Type driver name and choose race from the dropdown menu.
 ## <span style="color: green">Race Control</span>
 #### Persona—Safety Official
 
-Enter password to unlock interface
+Enter password to unlock interface  
 Start race will start the race and set race mode to safe. Four buttons will be available after:
  1. <span style="color: green">Safe</span>-drivers continue to drive, safe mode with green flag
  2. <span style="color: red">Stop Race</span>-drivers should stop driving, red flag is waved for danger
- 3. <span style="color: orange">Report Hazard</span>-caution hazard on the road, orange flag, drivers continue driving
+ 3. <span style="color: orange">Report Hazard</span>-hazard on the road, orange flag, drivers continue driving
  4. <span style="color: red">Finish Race</span>-race finished, chequered flag is waved
  5. End Session—after the race finished, safety officials must end the session to proceed to the next race.  
 
@@ -99,7 +99,9 @@ Start race will start the race and set race mode to safe. Four buttons will be a
 #### Persona-Lap-line Observer
 
 Enter password to unlock interface   
-Clicking on the assigned Car button to record lap completed with lap time.
+Clicking on the assigned Car button to record lap completed with lap time.  
+Another click increments lap count and records new lap time  
+Only best lap times are displayed in the leaderboard  
 
 # Public Panels
 ## <span style="color: green">Leaderboard</span>
@@ -108,8 +110,7 @@ Clicking on the assigned Car button to record lap completed with lap time.
 Leaderboard with time left, race flag and ranking.
 
 ## <span style="color: green">Next Race</span>
-#### Persona—Race Driver
-Switches to the subsequent race, once the current race is safe to start.  
+#### Persona—Race Driver 
 Display shows the drivers names, and the cars they're assigned to.  
 When the race session is ended, the Next Race display shows an additional message to proceed to the paddock.  
 ## <span style="color: green">Race Countdown</span>
@@ -120,9 +121,9 @@ The Timer shows time left for the race to finish
 ## <span style="color: green">Race Flags</span>
 #### Persona—Race Driver
 
-Shows the race mode in flags  
 
 <span style="color: green">Green</span>  - safe to drive  
 <span style="color: orange">Orange</span>  - drive with caution, hazard at the road  
 <span style="color: red">Red</span>  - stop driving, return to the pitlane  
 Chequered - race finish, return to the pitlane  
+After race has finished and safety official ends the session red flag is waved. New session drivers must return to the paddock.
