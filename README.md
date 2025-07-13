@@ -112,7 +112,7 @@ Leaderboard with time left, race flag and ranking.
 ## <span style="color: green">Next Race</span>
 #### Persona—Race Driver 
 Display shows the drivers names, and the cars they're assigned to.  
-When the race session is ended, the Next Race display shows an additional message to proceed to the paddock.  
+When the race session is ended, Next Race display alerts upcoming session drivers to return to the paddock. 
 ## <span style="color: green">Race Countdown</span>
 #### Persona—Race Driver
 
@@ -126,4 +126,5 @@ The Timer shows time left for the race to finish
 <span style="color: orange">Orange</span>  - drive with caution, hazard at the road  
 <span style="color: red">Red</span>  - stop driving, return to the pitlane  
 Chequered - race finish, return to the pitlane  
+<br></br>
 After race has finished and safety official ends the session red flag is waved. New session drivers must return to the paddock.
