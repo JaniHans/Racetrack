@@ -1,13 +1,17 @@
 {
-  "sessions": [],
-  "drivers": {},
+  "sessions": [
+    "s"
+  ],
+  "drivers": {
+    "s": []
+  },
   "raceState": {
-    "active": false,
-    "mode": "Danger",
-    "flag": "RED",
-    "startTime": 1752408202759,
-    "countdown": 60,
+    "active": true,
+    "mode": "Safe",
+    "flag": "GREEN",
+    "startTime": 1752426418338,
+    "countdown": 600,
     "laps": {},
-    "currentSession": null
+    "currentSession": "s"
   }
 }
