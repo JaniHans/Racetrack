@@ -170,4 +170,16 @@ function updateStats() {
     }
 
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('fullscreen');
+    if (btn) {
+        btn.onclick = () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        };
+    }
+});
 

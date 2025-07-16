@@ -23,8 +23,6 @@ socket.on('update:data', (data) => {
   updateUI();
 });
 
-
-
 socket.on('sessionEnded', (raceState) => {
   console.log("PROCEED TO THE PADDOCK")
   console.log(raceState.active)

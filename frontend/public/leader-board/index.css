@@ -115,3 +115,20 @@ button {
 .flag {
     font-size: 8px;
 }
+#fullscreen {
+    position: fixed;
+    top: 30px;
+    left: 20px;
+    background: #2196f3;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: background 0.2s;
+}
+#fullscreen:hover {
+    background: #1565c0;
+}

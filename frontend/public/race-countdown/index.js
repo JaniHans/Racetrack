@@ -56,15 +56,3 @@ function finishRace(state) {
      timerContainer.innerHTML = "RACE FINISHED";
  }
 }
-// document.addEventListener('DOMContentLoaded', () => {
-//     const btn = document.getElementById('fullscreen');
-//     if (btn) {
-//         btn.onclick = () => {
-//             if (document.fullscreenElement) {
-//                 document.exitFullscreen();
-//             } else {
-//                 document.documentElement.requestFullscreen();
-//             }
-//         };
-//     }
-// });
