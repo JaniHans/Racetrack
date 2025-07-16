@@ -3,9 +3,9 @@
   "drivers": {},
   "raceState": {
     "active": false,
-    "mode": "Danger",
-    "flag": "RED",
-    "startTime": 1752661515005,
+    "mode": null,
+    "flag": null,
+    "startTime": 1752662897684,
     "countdown": 600,
     "laps": {},
     "currentSession": null

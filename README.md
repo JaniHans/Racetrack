@@ -13,7 +13,7 @@ This project provides real-time race management interfaces (admin and public) us
 3. ▶️ Running the App
    1. Start the Backend Server in your terminal  
    ```npm start``` - 600 seconds race time OR  ```npm run dev``` - for 60 seconds race time   
-   2. Before you open all the interfaces please paste the following to your state.json(<span style="color: red">backend folder</span>) file
+   2. Before you open all the interfaces, please paste the following to your state.json(<span style="color: red">backend folder</span>) file
       ```
       {
       "sessions": [],
@@ -27,12 +27,12 @@ This project provides real-time race management interfaces (admin and public) us
       "laps": {},
       "currentSession": null
       }
-      }```
+      } 
    3. Start the Ngrok Tunnel (terminal) from ngrok.exe.  
    ```ngrok http 3000```  
    4. Ngrok will print a public URL like:  
     ```https://abc12345.ngrok-free.app```    
-   5. Click on the link to access main menu 
+   5. Click on the link to access the main menu 
 
 Concatenate the below found routes to your ngrok website or use the main menu interface
 
@@ -72,7 +72,7 @@ Enter password to unlock interface
 <br>
 ### ADD/REMOVE Sessions
 1. Type session name(must be unique) and click **Add Session** button  
-    - follow to update drivers details.  
+    - follow to update driver details.  
 2. Remove session using the red button.    
 
 ### ADD/EDIT/REMOVE Drivers
@@ -80,7 +80,7 @@ Type driver name and choose race from the dropdown menu.
 
 1. Add car or let program auto assign the car.
 2. Driver name has to be unique.  
-3. In the session table you can edit car and drivers and remove drivers. 
+3. In the session table you can edit the car and drivers and remove drivers. 
 4. Press save to apply changes.  
 
 ## <span style="color: green">Race Control</span>
@@ -99,7 +99,7 @@ Start race will start the race and set race mode to safe. Four buttons will be a
 #### Persona-Lap-line Observer
 
 Enter password to unlock interface.  
-Clicking on the assigned Car button to record lap completed with lap time.  
+Clicking on the assigned Car button to record the lap completed with lap time.  
 Another click increments lap count and records new lap time.  
 Only best lap times are displayed in the leaderboard.  
 
@@ -118,7 +118,7 @@ When the race session is ended, Next Race display alerts upcoming session driver
 
 The Timer shows the duration of the race.  
 Race finished status is set when timer runs out.   
-Safety official must end the session after race has finished.  
+Safety officials must end the session after the race has finished.  
 
 ## <span style="color: green">Race Flags</span>
 #### Persona—Race Driver

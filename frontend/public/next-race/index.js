@@ -23,8 +23,6 @@ socket.on('update:data', (data) => {
   updateUI();
 });
 
-
-
 socket.on('sessionEnded', (raceState) => {
   console.log("PROCEED TO THE PADDOCK")
   console.log(raceState.active)
@@ -42,49 +40,51 @@ function updateUI() {
   sessionTables.innerHTML = '';
   console.log(raceSessions.length);
 
-  raceSessions.forEach((session) => {
-    const sessionContainer = document.createElement('div');
-    sessionContainer.style.marginBottom = '2rem';
+  const firstSession = raceSessions[0];
+  if (!firstSession) return;
 
-    const sessionHeader = document.createElement('div');
-    sessionHeader.style.display = 'flex';
-    sessionHeader.style.alignItems = 'center';
-    sessionHeader.style.justifyContent = 'space-between';
-    sessionHeader.style.marginBottom = '1rem';
+  const sessionContainer = document.createElement('div');
+  sessionContainer.style.marginBottom = '2rem';
 
-    const sessionTitle = document.createElement('h3');
-    sessionTitle.textContent = `Session: ${session}`;
-    sessionTitle.style.margin = '0';
+  const sessionHeader = document.createElement('div');
+  sessionHeader.style.display = 'flex';
+  sessionHeader.style.alignItems = 'center';
+  sessionHeader.style.justifyContent = 'space-between';
+  sessionHeader.style.marginBottom = '1rem';
 
-    sessionHeader.appendChild(sessionTitle);
-    sessionContainer.appendChild(sessionHeader);
+  const sessionTitle = document.createElement('h3');
+  sessionTitle.textContent = `Session: ${firstSession}`;
+  sessionTitle.style.margin = '0';
 
-    const table = document.createElement('table');
-    table.id = `table-${session}`;
-    const headerRow = document.createElement('tr');
-    headerRow.innerHTML = `<th>Driver Name</th><th>Assigned Car</th>`;
-    table.appendChild(headerRow);
+  sessionHeader.appendChild(sessionTitle);
+  sessionContainer.appendChild(sessionHeader);
 
-    if (drivers[session]) {
-      drivers[session].forEach(({ name, car }) => {
-        const row = document.createElement('tr');
+  const table = document.createElement('table');
+  table.id = `table-${firstSession}`;
+  const headerRow = document.createElement('tr');
+  headerRow.innerHTML = `<th>Driver Name</th><th>Assigned Car</th>`;
+  table.appendChild(headerRow);
 
-        const driverCell = document.createElement('td');
-        driverCell.textContent = name;
+  if (drivers[firstSession]) {
+    drivers[firstSession].forEach(({ name, car }) => {
+      const row = document.createElement('tr');
 
-        const carCell = document.createElement('td');
-        carCell.textContent = car;
+      const driverCell = document.createElement('td');
+      driverCell.textContent = name;
 
-        row.appendChild(driverCell);
-        row.appendChild(carCell);
+      const carCell = document.createElement('td');
+      carCell.textContent = car;
 
-        table.appendChild(row);
-      });
-    }
+      row.appendChild(driverCell);
+      row.appendChild(carCell);
+
+      table.appendChild(row);
+    });
+  }
 
     sessionContainer.appendChild(table);
     sessionTables.appendChild(sessionContainer);
-  });
+
   if (raceSessions.length === 0 ) {
     console.log("From update")
     console.log(noUpcoming)
@@ -95,6 +95,7 @@ function updateUI() {
     noUpcoming.innerHTML = "";
   }
 }
+
 
 function proceedToThePaddock() {
   if (raceSessions.length !== 0) {
