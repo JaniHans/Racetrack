@@ -24,6 +24,7 @@ socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
     raceActive = state?.active ?? false;
     console.log(raceActive)
+    updateDriverTable();
     // Optionally update UI based on state
     // Update upcoming race
 });
@@ -39,6 +40,7 @@ socket.on('sessionEnded', (state) => {
     console.log("Session ended")
     raceActive = state.active;
     console.log(raceActive)
+
 
 })
 
@@ -63,12 +65,6 @@ socket.on('update:data', (data) => {
 
     raceActive = data.raceState?.active ?? false;
     console.log(raceActive)
-    if (raceActive) {
-        updateStats()
-    } else {
-        updateDriverTable()
-    }
-
 
     console.log("current race drivers " + currentRaceDrivers);
     console.log("METADATA " + metaData);
@@ -82,7 +78,7 @@ socket.on('lap:done', (bestLapTimes) => {
 
 function updateDriverTable() {
 
-    if (!raceActive) {
+    if (raceActive) {
 
         console.log("CREATING TABLE")
         tableContainer.innerHTML = "";

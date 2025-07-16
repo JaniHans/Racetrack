@@ -314,7 +314,7 @@ io.on('connection', (socket) => {
 
       io.emit('raceStarted', global.raceState);
       io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
-      io.emit('update:data', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState });
+      io.emit('update:data', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState, currentSession: global.raceState.currentSession });
     }
     // ADDED TIMEOUT
     setTimeout(() => {

@@ -2,27 +2,45 @@ const socket = io();
 
 let raceSessions = [];
 let drivers = {};
+let currentSession;
+let raceActive;
 
 socket.emit('fetch:data');
 
 socket.on('update:data', (data) => {
+  console.log(data)
+  console.log("UPDATE UI")
   raceSessions = data.sessions;
   drivers = data.drivers;
+  raceActive = data?.raceState.active ?? false;
+  currentSession = data?.raceState.currentSession ?? null;
+  if (raceActive && currentSession) {
+    raceSessions.shift();
+    delete drivers[currentSession];
+    updateUI();
+  }
+
   updateUI();
 });
 
+
+
 socket.on('sessionEnded', (raceState) => {
+  console.log("PROCEED TO THE PADDOCK")
   console.log(raceState.active)
   if (!raceState.active) {
    proceedToThePaddock();
   }
 });
 
+const noUpcoming = document.createElement('div');
+// noUpcoming.innerHTML = "No upcoming sessions";
 
 
 function updateUI() {
   const sessionTables = document.getElementById('sessionTables');
   sessionTables.innerHTML = '';
+  console.log(raceSessions.length);
 
   raceSessions.forEach((session) => {
     const sessionContainer = document.createElement('div');
@@ -67,10 +85,25 @@ function updateUI() {
     sessionContainer.appendChild(table);
     sessionTables.appendChild(sessionContainer);
   });
+  if (raceSessions.length === 0 ) {
+    console.log("From update")
+    console.log(noUpcoming)
+    noUpcoming.innerHTML = "No upcoming sessions";
+    document.body.append(noUpcoming);
+
+  } else {
+    noUpcoming.innerHTML = "";
+  }
 }
 
 function proceedToThePaddock() {
-  alert("DRIVERS PROCEED TO THE PADDOCK");
+  if (raceSessions.length !== 0) {
+    alert("DRIVERS PROCEED TO THE PADDOCK");
+  } else {
+    console.log("From proceed to paddock end session")
+    noUpcoming.innerHTML = "";
+    noUpcoming.innerHTML = "No upcoming sessions";
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -94,13 +94,13 @@ function updateUI() {
     removeButton.className = 'remove';
     removeButton.onclick = () => removeRaceSession(session);
 
-    const lockInButton = document.createElement('button');
-    lockInButton.textContent = 'Lock In';
-    lockInButton.className = 'add';
-    lockInButton.onclick = () => lockInSession(session);
+    // const lockInButton = document.createElement('button');
+    // lockInButton.textContent = 'Lock In';
+    // lockInButton.className = 'add';
+    // lockInButton.onclick = () => lockInSession(session);
 
     buttonGroup.appendChild(removeButton);
-    buttonGroup.appendChild(lockInButton);
+    // buttonGroup.appendChild(lockInButton);
 
     sessionHeader.appendChild(sessionTitle);
     sessionHeader.appendChild(buttonGroup);
