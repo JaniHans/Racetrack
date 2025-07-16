@@ -25,12 +25,9 @@ socket.on('raceFinished', (state) => {
 
 function startTimer(state) {
 
-
-
     if (timerInterval) {
         clearInterval(timerInterval);
     }
-
 
     timerInterval = setInterval(function () {
        const now = Date.now();
@@ -59,3 +56,15 @@ function finishRace(state) {
      timerContainer.innerHTML = "RACE FINISHED";
  }
 }
+// document.addEventListener('DOMContentLoaded', () => {
+//     const btn = document.getElementById('fullscreen');
+//     if (btn) {
+//         btn.onclick = () => {
+//             if (document.fullscreenElement) {
+//                 document.exitFullscreen();
+//             } else {
+//                 document.documentElement.requestFullscreen();
+//             }
+//         };
+//     }
+// });

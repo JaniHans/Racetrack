@@ -30,3 +30,15 @@ function updateFlagScreen(flag) {
         console.log('target does not exist', flag);
     }
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('fullscreen');
+    if (btn) {
+        btn.onclick = () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        };
+    }
+});
