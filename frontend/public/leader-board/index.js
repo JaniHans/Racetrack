@@ -109,8 +109,9 @@ function updateDriverTable() {
         if (drivers[session]) {
             drivers[session].forEach(({ name, car, fastestLap, currentLap }) => {
                 const row = document.createElement('tr');
+                let lapTime = fastestLap? fastestLap : "-"
 
-                row.innerHTML = `<td>${name}</td><td>${car}</td><td>${fastestLap}</td><td>${currentLap}</td>`;
+                row.innerHTML = `<td>${name}</td><td>${car}</td><td>${lapTime}</td><td>${currentLap}</td>`;
                 table.appendChild(row);
             });
         }
