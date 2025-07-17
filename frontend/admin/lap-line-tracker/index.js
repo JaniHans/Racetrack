@@ -49,12 +49,28 @@ socket.on('update:data', (data) => {
   console.log(data)
   console.log(data.raceState)
   console.log(data.raceState.laps)
+  
   if (data.raceState && data.raceState.laps) {
     lapCounts = data.raceState.laps;
   }
-  if (data.raceState && data.raceState.bestLaps) {
-    bestLapTimes = { ...data.raceState.bestLaps };
+  
+  // Load fastest lap times from driver data
+  if (data.drivers && data.raceState && data.raceState.currentSession) {
+    const currentSession = data.raceState.currentSession;
+    const sessionDrivers = data.drivers[currentSession] || [];
+    sessionDrivers.forEach(driver => {
+      if (driver.fastestLap) {
+        bestLapTimes[driver.car] = driver.fastestLap;
+      }
+    });
   }
+  
+  // Set race start time if race is active but we don't have it yet
+  if (data.raceState && data.raceState.active && data.raceState.startTime && !raceStartTime) {
+    raceStartTime = data.raceState.startTime;
+    console.log("Race start time set from loaded data:", raceStartTime);
+  }
+  
   if (data.raceState && data.raceState.lapTimestamps) {
     lapTimestamps = { ...data.raceState.lapTimestamps };
   }
@@ -119,28 +135,36 @@ function updateLapButtons() {
       if (!lapTimestamps[car]) lapTimestamps[car] = [];
       lapTimestamps[car].push(now);
 
+      let lapTime = null;
+      
       // Calculate lap time if not the first lap
       if (lapTimestamps[car].length > 1) {
         const prev = lapTimestamps[car][lapTimestamps[car].length - 2];
-        const lapTime = now - prev;
+        lapTime = now - prev;
+        console.log(`Lap ${lapTimestamps[car].length} for ${car}: ${lapTime}ms (previous lap to current)`);
         if (!bestLapTimes[car] || lapTime < bestLapTimes[car]) {
           bestLapTimes[car] = lapTime;
-
         }
       } else if (raceStartTime) {
         // First lap: time since race start
-        const lapTime = now - raceStartTime;
+        lapTime = now - raceStartTime;
+        console.log(`First lap for ${car}: ${lapTime}ms (race start to now)`);
+        console.log(`Race started at: ${raceStartTime}, Current time: ${now}`);
         bestLapTimes[car] = lapTime;
+      } else {
+        console.log(`No lap time calculated for ${car} - no race start time available`);
       }
 
       console.log(bestLapTimes)
       console.log(bestLapTimes["Car A"])
       console.log(bestLapTimes["Car B"])
-      socket.emit('lap:completed', { car, key: observerKey });
+      
+      // Send lap completion with lap time to backend
+      socket.emit('lap:completed', { car, key: observerKey, lapTime });
       socket.emit('lap:done' , {
       value : bestLapTimes
       });
-      console.log("Lap completed")
+      console.log("Lap completed with time:", lapTime);
       updateLapCounts();
     };
     container.appendChild(lapButton);
@@ -155,7 +179,7 @@ function updateLapCounts() {
     const count = lapCounts[car] || 0;
     let best = bestLapTimes[car];
     let bestStr = best ? (best / 1000).toFixed(2) + ' s' : '-';
-    container.innerHTML += `<div>Car ${car}: ${count} laps | Best Lap: ${bestStr}</div>`;
+    container.innerHTML += `<div>${car}: ${count} laps | Best Lap: ${bestStr}</div>`;
 
   });
 }

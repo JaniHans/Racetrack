@@ -5,20 +5,23 @@
   "drivers": {
     "d": [
       {
-        "name": "d",
+        "name": "s",
         "car": "Car A",
-        "fastestLap": null,
-        "currentLap": 0
+        "fastestLap": 490,
+        "currentLap": 490
       }
     ]
   },
   "raceState": {
-    "active": false,
-    "mode": "Danger", 
-    "flag": "RED",
-    "startTime": 1752715340827,
+    "currentSession": "d",
+    "active": true,
+    "mode": "Safe",
+    "flag": "GREEN",
+    "startTime": 1752742314742,
     "countdown": 600,
-    "laps": {},
-    "currentSession": "d"
+    "laps": {
+      "Car A": 5,
+      "Car B": 2
+    }
   }
 }

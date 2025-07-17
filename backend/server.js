@@ -37,7 +37,15 @@ const STATE_FILE = path.join(__dirname, 'state.json');
 function loadState() {
   if (fs.existsSync(STATE_FILE)) {
     try {
-      const data = JSON.parse(fs.readFileSync(STATE_FILE, 'utf-8'));
+      const fileContent = fs.readFileSync(STATE_FILE, 'utf-8').trim();
+      if (fileContent === '') {
+        // File is empty, initialize with default state
+        console.log('State file is empty, initializing with default state.');
+        global.raceState = {};
+        return;
+      }
+      
+      const data = JSON.parse(fileContent);
       sessions = data.sessions || [];
       drivers = data.drivers || {};
       // If you have raceState or other state, load it here as well
@@ -45,6 +53,8 @@ function loadState() {
       console.log('State loaded from disk.');
     } catch (e) {
       console.error('Failed to load state:', e);
+      console.log('Initializing with default state.');
+      global.raceState = {};
     }
 
   } else {
@@ -342,44 +352,48 @@ io.on('connection', (socket) => {
     }
     // ADDED TIMEOUT
     setTimeout(() => {
-      if (raceState.active) {
-        raceState.mode = 'Finish';
-        raceState.flag = 'CHEQUERED';
-        raceState.active = false;
-        io.emit('raceFinished', raceState);
+      if (global.raceState.active) {
+        global.raceState.mode = 'Finish';
+        global.raceState.flag = 'CHEQUERED';
+        global.raceState.active = false;
+        io.emit('raceFinished', global.raceState);
+        saveState();
       }
 
 
-    }, raceState.countdown * 1000);
+    }, global.raceState.countdown * 1000);
 
 
   });
   socket.on('race:safe', () => {
-    raceState.mode = 'Safe';
-    raceState.flag = 'GREEN';
-    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+    global.raceState.mode = 'Safe';
+    global.raceState.flag = 'GREEN';
+    io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
+    saveState();
   })
   socket.on('race:stop', () => {
     console.log('STOP RACE RECEIVED'); //
-    raceState.mode = 'Danger';
-    raceState.flag = 'RED';
-    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+    global.raceState.mode = 'Danger';
+    global.raceState.flag = 'RED';
+    io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
+    saveState();
 
   });
   socket.on('race:hazard', () => {
     console.log('Hazard RACE RECEIVED'); //
-    raceState.mode = 'Hazard';
-    raceState.flag = 'YELLOW';
-    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
+    global.raceState.mode = 'Hazard';
+    global.raceState.flag = 'YELLOW';
+    io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
+    saveState();
 
   });
   socket.on('race:finish', () => {
     console.log('FINISH RACE RECEIVED'); //
-    raceState.mode = 'Danger';
-    raceState.flag = 'CHEQUERED';
-    raceState.active = false;
-    io.emit('modeChanged', { mode: raceState.mode, flag: raceState.flag });
-    io.emit('raceFinished', raceState);
+    global.raceState.mode = 'Danger';
+    global.raceState.flag = 'CHEQUERED';
+    global.raceState.active = false;
+    io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
+    io.emit('raceFinished', global.raceState);
     saveState();
   });
   socket.on('race:endSession', () => {
@@ -418,19 +432,45 @@ socket.on('session:lockin', ({ session, key }) => {
   });
 
   // Lap completed event
-  socket.on('lap:completed', ({ car, key }) => {
+  socket.on('lap:completed', ({ car, key, lapTime }) => {
     if (key !== process.env.KEY_OBSERVER) return;
+    
+    // Initialize race state laps if not exists
     if (!global.raceState.laps) global.raceState.laps = {};
+    
+    // Increment lap count
     global.raceState.laps[car] = (global.raceState.laps[car] || 0) + 1;
+    
+    // Update fastest lap time if lapTime is provided
+    if (lapTime && global.raceState.currentSession) {
+      const currentSession = global.raceState.currentSession;
+      const sessionDrivers = drivers[currentSession];
+      const driver = sessionDrivers && sessionDrivers.find(d => d.car === car);
+      
+      if (driver) {
+        // Update fastest lap if this is faster or if no fastest lap exists
+        if (!driver.fastestLap || lapTime < driver.fastestLap) {
+          driver.fastestLap = lapTime;
+          console.log(`New fastest lap for ${driver.name} (${car}): ${lapTime}ms`);
+        }
+        
+        // Update current lap time
+        driver.currentLap = lapTime;
+        console.log(`Current lap for ${driver.name} (${car}): ${lapTime}ms`);
+      }
+    }
+    
     const ignoreReceptionist = true;
-
     console.log("LAP COUNTER " + global.raceState.laps[car]);
     io.emit('update:data', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState });
+    saveState(); // Save state after lap completion
   });
 });
 // Start
-httpServer.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}/index.html`);
+httpServer.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}/index.html`);
+  console.log(`Server accessible from network at http://192.168.0.28:${PORT}/index.html`);
+  console.log(`Mobile devices can access at: http://192.168.0.28:${PORT}`);
   console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
   console.log('Race-Control key:', process.env.KEY_SAFETY);
   console.log('Lap-Line-Tracker key:', process.env.KEY_OBSERVER);
