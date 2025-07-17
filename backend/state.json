@@ -1,22 +1,11 @@
 {
-  "sessions": [
-    "d"
-  ],
-  "drivers": {
-    "d": [
-      {
-        "name": "d",
-        "car": "Car A",
-        "fastestLap": null,
-        "currentLap": 0
-      }
-    ]
-  },
+  "sessions": [],
+  "drivers": {},
   "raceState": {
     "active": false,
-    "mode": "Danger",
-    "flag": "RED",
-    "startTime": 1752715340827,
+    "mode": null,
+    "flag": null,
+    "startTime": 1752744107707,
     "countdown": 600,
     "laps": {},
     "currentSession": null

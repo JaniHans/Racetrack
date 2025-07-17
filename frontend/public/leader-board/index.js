@@ -1,4 +1,3 @@
-
 const socket = io();
 
 let currentSession = null;
@@ -40,6 +39,7 @@ socket.on('sessionEnded', (state) => {
     console.log("Session ended")
     raceActive = state.active;
     console.log(raceActive)
+    updateUpcomingRace();
 
 
 })
@@ -68,6 +68,7 @@ socket.on('update:data', (data) => {
 
     console.log("current race drivers " + currentRaceDrivers);
     console.log("METADATA " + metaData);
+    updateUpcomingRace();
 });
 socket.on('lap:done', (bestLapTimes) => {
     console.log("RECEIVING CAR AND BEST TIME BELOW")
@@ -75,6 +76,19 @@ socket.on('lap:done', (bestLapTimes) => {
     bestTimes = bestLapTimes.value;
     updateStats();
 })
+
+function updateUpcomingRace() {
+    console.log("Updating upcoming race ")
+    console.log(currentSession)
+    currentSession = raceSessions[0];
+
+    if (!raceActive) {
+        thisRace.innerHTML = currentSession
+            ? `<b>Upcoming Race:</b> ${currentSession}`
+            : 'No upcoming races';
+    }
+
+}
 
 function updateDriverTable() {
 
@@ -85,22 +99,10 @@ function updateDriverTable() {
 
         let session = raceSessions[0]
         // Show only the first session (current/upcoming)
-
         currentSession = session;
+        console.log("Race started upcoming race changed to current race")
+        thisRace.innerHTML = "Current Race : " + currentSession;
 
-
-
-        // Show next session as main heading if no current race
-        if (!currentSession) {
-            thisRace.innerHTML = session
-                ? `<b>Upcoming Race:</b> ${session}`
-                : 'No upcoming races';
-        } else {
-            if (raceActive) {
-                thisRace.innerHTML = "Current Race : " + currentSession;
-            }
-            thisRace.innerHTML = "Upcoming Race : " + currentSession;
-        }
         const table = document.createElement('table');
         table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th><th>Fastest Lap</th><th>Current Lap</th></tr>`;
 
@@ -158,7 +160,7 @@ function updateStats() {
             // format lap time in seconds or show if no time available
 
             const bestStr = bestTime !== null && bestTime !== undefined
-            ? (bestTime / 1000).toFixed(2) + 's'
+                ? (bestTime / 1000).toFixed(2) + 's'
                 : ' - ';
             const currentLap = metaData?.raceState?.laps?.[driver.car] ?? '-';
 
@@ -182,5 +184,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
+    updateUpcomingRace();
 });
-
