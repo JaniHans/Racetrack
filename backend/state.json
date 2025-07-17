@@ -14,11 +14,11 @@
   },
   "raceState": {
     "active": false,
-    "mode": "Danger",
+    "mode": "Danger", 
     "flag": "RED",
     "startTime": 1752715340827,
     "countdown": 600,
     "laps": {},
-    "currentSession": null
+    "currentSession": "d"
   }
 }
