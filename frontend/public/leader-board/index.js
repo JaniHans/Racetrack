@@ -16,12 +16,15 @@ socket.on('connect', () => {
     console.log('Connected to server');
 
 });
-
 socket.emit('fetch:data');
 // only update table if first session not true or if sessionEnded
-socket.on('raceStarted', (state) => {
-    console.log('Race has started:', state);
-    raceActive = state?.active ?? false;
+socket.on('raceStarted', (data) => {
+    console.log('Race has started:', data);
+    console.log(data.drivers)
+    raceSessions = data.sessions;
+    drivers = data.drivers;
+    cars = data.cars || cars;
+    raceActive = data.raceState?.active ?? false;
     console.log(raceActive)
     updateDriverTable();
     // Optionally update UI based on state
@@ -34,26 +37,19 @@ socket.on('raceFinished', (state) => {
     raceActive = state.raceState?.active ?? false;
     console.log(raceActive)
 });
-
 socket.on('sessionEnded', (state) => {
     console.log("Session ended")
     raceActive = state.active;
     console.log(raceActive)
     updateUpcomingRace();
-
-
 })
-
 socket.on('modeChanged', ({ mode, flag }) => {
     console.log(`Mode changed to ${mode}, flag: ${flag}`);
     // Optionally update button text or flag screen
 });
-
 socket.on('receive:current-session', (currentRace) => {
     currentSession = currentRace;
-
 })
-
 
 socket.on('update:data', (data) => {
     console.log("What is the order of your calls")
@@ -62,23 +58,19 @@ socket.on('update:data', (data) => {
     cars = data.cars || cars;
     metaData = data;
     console.log(data);
-
     raceActive = data.raceState?.active ?? false;
-    console.log(raceActive)
-
-    console.log("current race drivers " + currentRaceDrivers);
-    console.log("METADATA " + metaData);
     updateUpcomingRace();
 });
 socket.on('lap:done', (bestLapTimes) => {
     console.log("RECEIVING CAR AND BEST TIME BELOW")
-    console.log(bestLapTimes.value);
+
     bestTimes = bestLapTimes.value;
+
     updateStats();
 })
 
 function updateUpcomingRace() {
-    console.log("Updating upcoming race ")
+
     console.log(currentSession)
     currentSession = raceSessions[0];
 
@@ -113,6 +105,7 @@ function updateDriverTable() {
                 const row = document.createElement('tr');
                 let lapTime = fastestLap? fastestLap : "-"
 
+                console.log("REAL " + currentLap);
                 row.innerHTML = `<td>${name}</td><td>${car}</td><td>${lapTime}</td><td>${currentLap}</td>`;
                 table.appendChild(row);
             });
@@ -130,7 +123,7 @@ function updateStats() {
         // sort times
 
         const sortedTimes = Object.entries(bestTimes).sort((a, b ) => a[1] - b[1]);
-        console.log(sortedTimes)
+
         // Show only the first session (current/upcoming)
 
         const table = document.createElement('table');
@@ -145,16 +138,17 @@ function updateStats() {
         // use besttimes[car] if available , fallback to drivers own fastestlap
         // use infinity for missing/null values to push them to the bottom
 
-
         const sortedDrivers = [...sessionDrivers].sort((a, b) => {  // <- safe copy, original stays intact
             const timeA = bestTimes[a.car] ?? a.fastestLap ?? Infinity; // ?? returns the first value(bestTimes[a.car]) second (a.fastestlap= that is not null or undefined.
             const timeB = bestTimes[b.car] ?? b.fastestLap ?? Infinity;
             return timeA - timeB;
         });
+
         // loop through each driver in sorted order
         sortedDrivers.forEach(driver => {
             const row = document.createElement('tr');
             // get the best lap time from bestTimes if present, otherwise from driver object
+
             const bestTime = bestTimes[driver.car] ?? driver.fastestLap;
 
             // format lap time in seconds or show if no time available
@@ -162,7 +156,22 @@ function updateStats() {
             const bestStr = bestTime !== null && bestTime !== undefined
                 ? (bestTime / 1000).toFixed(2) + 's'
                 : ' - ';
-            const currentLap = metaData?.raceState?.laps?.[driver.car] ?? '-';
+            // 0 {name: 'a', car: 'Car A', fastestLap: 8070, currentLap: 2}
+            // 1 {name: 'b', car: 'Car B', fastestLap: null, currentLap: 1}
+            let currentLap;
+            console.log(driver)
+            console.log(driver.name)
+            console.log("DRIVERS DRIVERS DRIVERS")
+            console.log(drivers)
+            console.log(drivers[currentSession])
+            console.log("Current session" + currentSession);
+            drivers.first.forEach(metaDriver => {
+                console.log(metaDriver)
+                console.log(metaDriver.name)
+                if (metaDriver.name === driver.name) {
+                    currentLap = metaDriver.currentLap;
+                }
+            })
 
             // fill in the table row with driver data
             row.innerHTML = `<td>${driver.name}</td><td>${driver.car}</td><td>${bestStr}</td><td>${currentLap}</td>`;

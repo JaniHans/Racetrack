@@ -36,9 +36,6 @@ window.addEventListener('DOMContentLoaded', () => {
       input.value = '';
     }
   });
-
-
-
 });
 
 // Listen for car data

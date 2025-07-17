@@ -13,7 +13,9 @@ socket.on('raceStarted', (state) => {
     console.log('Race has started:', state);
     // Optionally update UI based on state
     // Start the timer
-    startTimer(state)
+    let startTime = state.raceState.startTime;
+    let countdown = state.raceState.countdown;
+    startTimer(startTime, countdown)
 });
 socket.on('raceFinished', (state) => {
     console.log('Race has finished:', state);
@@ -23,7 +25,7 @@ socket.on('raceFinished', (state) => {
     finishRace(state)
 });
 
-function startTimer(state) {
+function startTimer(startTime, countdown) {
 
     if (timerInterval) {
         clearInterval(timerInterval);
@@ -32,8 +34,8 @@ function startTimer(state) {
     timerInterval = setInterval(function () {
        const now = Date.now();
 
-       let difference = now - state.startTime;
-       let timer = (state.countdown * 1000) - difference;
+       let difference = now - startTime;
+       let timer = (countdown * 1000) - difference;
        let minutes = Math.floor((timer % (1000 * 60 * 60)) / (1000 * 60));
        let seconds = Math.floor((timer % (1000 * 60)) / 1000);
 
@@ -47,12 +49,12 @@ function startTimer(state) {
 
 }
 
-function finishRace(state) {
+function finishRace(startTime) {
     if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
     }
-    if (!state.active) {
+    if (!startTime) {
      timerContainer.innerHTML = "RACE FINISHED";
  }
 }

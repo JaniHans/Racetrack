@@ -6,4 +6,5 @@ export let raceState = {
   nextSession : null, // // used by Safety Official + screens
   countdown: null,
   laps: {}, // driverId -> lap count
+  currentLaps: {} // driverId > current lap
 };

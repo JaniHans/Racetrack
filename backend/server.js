@@ -342,11 +342,26 @@ io.on('connection', (socket) => {
       global.raceState.flag = 'GREEN';
       global.raceState.startTime = Date.now();
       global.raceState.countdown = isDev ? 60 : 600;
+      if (!global.raceState.currentLaps) global.raceState.currentLaps = {};
+      for (const driver of drivers[startedSession]) {
+        console.log(driver.currentLap)
+        driver.currentLap = 1;
+        console.log(driver.currentLap);
+      }
+      // let fastestLap = null;
+      // let currentLap = 0;
+      //
+      // drivers[session].push({ name, car: assignedCar, fastestLap, currentLap});
+      // console.log(drivers[session]);
+      // io.emit('update:data', { sessions, drivers, cars, fastestLap, currentLap, raceState: global.raceState });
+
       saveState();
 
       const ignoreReceptionist = true;
+      console.log(drivers);
+      console.log(drivers[startedSession])
 
-      io.emit('raceStarted', global.raceState);
+      io.emit('raceStarted', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState, currentSession: global.raceState.currentSession});
       io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
       io.emit('update:data', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState, currentSession: global.raceState.currentSession });
     }
@@ -437,9 +452,12 @@ socket.on('session:lockin', ({ session, key }) => {
     
     // Initialize race state laps if not exists
     if (!global.raceState.laps) global.raceState.laps = {};
-    
+
+
+
     // Increment lap count
     global.raceState.laps[car] = (global.raceState.laps[car] || 0) + 1;
+
     
     // Update fastest lap time if lapTime is provided
     if (lapTime && global.raceState.currentSession) {
@@ -455,11 +473,11 @@ socket.on('session:lockin', ({ session, key }) => {
         }
         
         // Update current lap time
-        driver.currentLap = lapTime;
+        driver.currentLap += 1;
         console.log(`Current lap for ${driver.name} (${car}): ${lapTime}ms`);
       }
     }
-    
+
     const ignoreReceptionist = true;
     console.log("LAP COUNTER " + global.raceState.laps[car]);
     io.emit('update:data', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState });
