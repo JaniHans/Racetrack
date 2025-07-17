@@ -72,8 +72,19 @@ function updateDriverTable() {
             ? `<b>Upcoming Race:</b> ${nextSession}`
             : 'No upcoming races';
 
-        // Show Start button if there is a session
-        start.style.display = raceSessions.length ? 'inline-block' : 'none';
+        // Check if the next session has drivers
+        const hasDrivers = nextSession && drivers[nextSession] && drivers[nextSession].length > 0;
+        
+        // Show Start button if there is a session, but disable if no drivers
+        if (raceSessions.length) {
+            start.style.display = 'inline-block';
+            start.disabled = !hasDrivers;
+            start.style.opacity = hasDrivers ? '1' : '0.5';
+            start.style.cursor = hasDrivers ? 'pointer' : 'not-allowed';
+        } else {
+            start.style.display = 'none';
+        }
+        
         safe.style.display = 'none';
         stop.style.display = 'none';
         hazard.style.display = 'none';
@@ -114,7 +125,19 @@ function updateDriverTable() {
         finish.style.display = 'inline-block';
         end.style.display = 'none';
     } else {
-        start.style.display = raceSessions.length ? 'inline-block' : 'none';
+        // Check if the next session has drivers
+        const nextSession = raceSessions[0];
+        const hasDrivers = nextSession && drivers[nextSession] && drivers[nextSession].length > 0;
+        
+        if (raceSessions.length) {
+            start.style.display = 'inline-block';
+            start.disabled = !hasDrivers;
+            start.style.opacity = hasDrivers ? '1' : '0.5';
+            start.style.cursor = hasDrivers ? 'pointer' : 'not-allowed';
+        } else {
+            start.style.display = 'none';
+        }
+        
         safe.style.display = 'none';
         stop.style.display = 'none';
         hazard.style.display = 'none';
@@ -171,13 +194,19 @@ function endSession() {
     end.style.display = 'none';
     upcomingRaceContainer.style.display = 'block';
 
-
     if (raceSessions.length !== 0) {
         console.log(raceSessions)
         console.log("START BUTTON AVAILABLE")
+        
+        // Check if the next session has drivers
+        const nextSession = raceSessions[0];
+        const hasDrivers = nextSession && drivers[nextSession] && drivers[nextSession].length > 0;
+        
         start.style.display = 'inline-block';
+        start.disabled = !hasDrivers;
+        start.style.opacity = hasDrivers ? '1' : '0.5';
+        start.style.cursor = hasDrivers ? 'pointer' : 'not-allowed';
     }
-
 }
 function finishRaceButtonsProcedure() {
     safe.style.display = 'none';

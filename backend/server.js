@@ -90,7 +90,7 @@ adminRoutes.forEach((route) => {
 
 // Simple API for health check or race info
 app.get('/api/status', (req, res) => {
-  res.json({ status: 'ok', raceActive: global.raceState?.active || false });
+  res.json({ status: 'ok', raceActive: (global.raceState && global.raceState.active) || false });
 });
 // for timer to be used everywhere
 app.use(express.static(path.join(__dirname,'../frontend/public/race-countdown')));
@@ -149,15 +149,39 @@ io.on('connection', (socket) => {
 
   // Handle receptionist authentication
   socket.on('auth:receptionist', ({ key }) => {
-    socket.emit('auth:receptionist:result', checkReceptionistKey(key));
+    const isValid = checkReceptionistKey(key);
+    if (isValid) {
+      socket.emit('auth:receptionist:result', true);
+    } else {
+      // Add 500ms delay for incorrect key
+      setTimeout(() => {
+        socket.emit('auth:receptionist:result', false);
+      }, 500);
+    }
   });
 // Handle safety official authentication
   socket.on('auth:race-control', ({ key }) => {
-    socket.emit('auth:race-control:result', checkSafetyKey(key));
+    const isValid = checkSafetyKey(key);
+    if (isValid) {
+      socket.emit('auth:race-control:result', true);
+    } else {
+      // Add 500ms delay for incorrect key
+      setTimeout(() => {
+        socket.emit('auth:race-control:result', false);
+      }, 500);
+    }
   });
 // Handle lap line observer authentication
   socket.on('auth:observer', ({ key }) => {
-    socket.emit('auth:observer:result', checkObserverKey(key));
+    const isValid = checkObserverKey(key);
+    if (isValid) {
+      socket.emit('auth:observer:result', true);
+    } else {
+      // Add 500ms delay for incorrect key
+      setTimeout(() => {
+        socket.emit('auth:observer:result', false);
+      }, 500);
+    }
   });
 
   // Handle adding a new session
@@ -234,7 +258,7 @@ io.on('connection', (socket) => {
 
     const safeName = typeof name === 'string' ? name.trim() : String(name).trim();
 
-    if (sessions.includes(session) && drivers[session]?.find((driver) => driver.name === safeName)) {
+    if (sessions.includes(session) && drivers[session] && drivers[session].find((driver) => driver.name === safeName)) {
       drivers[session] = drivers[session].filter((driver) => driver.name !== safeName);
       io.emit('update:data', { sessions, drivers, raceState: global.raceState });
       saveState();
@@ -253,8 +277,8 @@ io.on('connection', (socket) => {
 
     if (
       sessions.includes(session) &&
-      drivers[session]?.find((driver) => driver.name === safeOldName) &&
-      !drivers[session]?.find((driver) => driver.name === safeNewName)
+      drivers[session] && drivers[session].find((driver) => driver.name === safeOldName) &&
+      drivers[session] && !drivers[session].find((driver) => driver.name === safeNewName)
     ) {
       drivers[session] = drivers[session].map((driver) =>
         driver.name === safeOldName ? { ...driver, name: safeNewName } : driver
@@ -294,7 +318,7 @@ io.on('connection', (socket) => {
 
   // Add this to your fetch:data handler
   socket.on('fetch:data', () => {
-    socket.emit('update:data', { sessions, drivers, cars, raceState: global.raceState, raceActive: global.raceState?.active || false });
+    socket.emit('update:data', { sessions, drivers, cars, raceState: global.raceState, raceActive: (global.raceState && global.raceState.active) || false });
 
   });
 // safety control , start race

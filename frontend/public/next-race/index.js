@@ -14,10 +14,28 @@ socket.on('update:data', (data) => {
   drivers = data.drivers;
   raceActive = data?.raceState.active ?? false;
   currentSession = data?.raceState.currentSession ?? null;
+  
+  // If a race is active, show only the NEXT session (the one after current)
   if (raceActive && currentSession) {
-    raceSessions.shift();
-    delete drivers[currentSession];
-    updateUI();
+    const currentIndex = raceSessions.indexOf(currentSession);
+    if (currentIndex !== -1 && currentIndex < raceSessions.length - 1) {
+      // Show only the next session (the one immediately after current)
+      const nextSession = raceSessions[currentIndex + 1];
+      raceSessions = [nextSession];
+      // Keep only the drivers for the next session
+      drivers = { [nextSession]: drivers[nextSession] || [] };
+    } else {
+      // No next session available
+      raceSessions = [];
+      drivers = {};
+    }
+  } else if (!raceActive) {
+    // When no race is active, show only the first session (next to start)
+    if (raceSessions.length > 0) {
+      const nextSession = raceSessions[0];
+      raceSessions = [nextSession];
+      drivers = { [nextSession]: drivers[nextSession] || [] };
+    }
   }
 
   updateUI();
@@ -82,6 +100,18 @@ function updateUI() {
 
     sessionContainer.appendChild(table);
     sessionTables.appendChild(sessionContainer);
+    
+    // Show paddock message if no race is active and session has drivers
+    if (!raceActive && drivers[session] && drivers[session].length > 0) {
+      const paddockMessage = document.createElement('div');
+      paddockMessage.style.color = 'red';
+      paddockMessage.style.fontWeight = 'bold';
+      paddockMessage.style.fontSize = '1.5rem';
+      paddockMessage.style.marginTop = '1rem';
+      paddockMessage.innerHTML = "DRIVERS PROCEED TO THE PADDOCK";
+      
+      sessionContainer.appendChild(paddockMessage);
+    }
   });
   if (raceSessions.length === 0 ) {
     console.log("From update")
@@ -91,16 +121,6 @@ function updateUI() {
 
   } else {
     noUpcoming.innerHTML = "";
-  }
-}
-
-function proceedToThePaddock() {
-  if (raceSessions.length !== 0) {
-    alert("DRIVERS PROCEED TO THE PADDOCK");
-  } else {
-    console.log("From proceed to paddock end session")
-    noUpcoming.innerHTML = "";
-    noUpcoming.innerHTML = "No upcoming sessions";
   }
 }
 
