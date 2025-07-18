@@ -75,9 +75,11 @@ socket.on('lap:done', (bestLapTimes) => {
 })
 socket.on('response:lap-times', (bestLapTimes) => {
     console.log("AFTER RELOADING")
-    console.log(bestLapTimes)
+
     bestTimes = bestLapTimes.value || {};
+    console.log("BESTLAP TIMES OBJECT " , bestLapTimes)
     if (Object.keys(bestTimes).length > 0) {
+        console.log("true it is empty")
         updateStats();
     } else {
         updateDriverTable();
@@ -145,7 +147,7 @@ function updateStats() {
         table.innerHTML = `<tr><th>Driver Name</th><th>Assigned Car</th><th>Fastest Lap</th><th>Current Lap</th></tr>`;
 
         // get the list of drivers for current session
-        const sessionDrivers = currentRaceDrivers[currentSession];
+        const sessionDrivers = drivers[currentSession];
 
         if (!sessionDrivers) return ; // Exit if there are no drivers in the session
 

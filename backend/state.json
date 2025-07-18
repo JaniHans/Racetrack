@@ -7,7 +7,7 @@
     "mode": "Danger",
     "flag": "RED",
     "startTime": null,
-    "countdown": 60,
+    "countdown": 600,
     "laps": {},
     "currentLaps": {}
   }

@@ -438,18 +438,18 @@ socket.on('session:lockin', ({ session, key }) => {
   socket.on('request:lap-times', (data) => {
 
     const session = sessions[0] || null;
-    const sessionDrivers = global.drivers?.[session];
+    const sessionDrivers = drivers[global.raceState?.currentSession];
 
     const bestLapTimes = {};
-
+    console.log("SESSION DRIVERS " , sessionDrivers)
     if (sessionDrivers) {
       sessionDrivers.forEach(driver => {
-        if (driver.fastestLap !== null && driver.fastestLap !== undefined) {
-          bestLapTimes[driver.car] = driver.fastestLap;
-        }
+
+        bestLapTimes[driver.car] = driver.fastestLap;
+
       });
     }
-
+    console.log('Sending lapTimes: ', bestLapTimes)
     socket.emit('response:lap-times', { value: bestLapTimes });
   });
 
