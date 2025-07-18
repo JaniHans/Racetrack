@@ -135,8 +135,6 @@ app.get('/race-flags', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/race-flags/index.html'));
 });
 
-
-
 // Socket.IO
 io.on('connection', (socket) => {
   console.log('Client connected');
@@ -429,8 +427,6 @@ io.on('connection', (socket) => {
     }
   });
 
-
-
 socket.on('fetch:current-session', () => {
   const currentSession = sessions[0] || null;
   //const currentSession = sessions.shift() || null;
@@ -445,6 +441,24 @@ socket.on('session:lockin', ({ session, key }) => {
   socket.on('lap:done', (data) => {
     socket.broadcast.emit('lap:done', data); // Sends to all clients except sender
   });
+  socket.on('request:lap-times', (data) => {
+
+    const session = sessions[0] || null;
+    const sessionDrivers = global.drivers?.[session];
+
+    const bestLapTimes = {};
+
+    if (sessionDrivers) {
+      sessionDrivers.forEach(driver => {
+        if (driver.fastestLap !== null && driver.fastestLap !== undefined) {
+          bestLapTimes[driver.car] = driver.fastestLap;
+        }
+      });
+    }
+
+    socket.emit('response:lap-times', { value: bestLapTimes });
+  });
+
 
   // Lap completed event
   socket.on('lap:completed', ({ car, key, lapTime }) => {

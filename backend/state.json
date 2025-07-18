@@ -1,12 +1,35 @@
 {
-  "sessions": [],
-  "drivers": {},
+  "sessions": [
+    "third"
+  ],
+  "drivers": {
+    "third": [
+      {
+        "name": "a",
+        "car": "Car A",
+        "fastestLap": null,
+        "currentLap": 1
+      },
+      {
+        "name": "b",
+        "car": "Car B",
+        "fastestLap": null,
+        "currentLap": 1
+      },
+      {
+        "name": "c",
+        "car": "Car C",
+        "fastestLap": null,
+        "currentLap": 1
+      }
+    ]
+  },
   "raceState": {
-    "currentSession": null,
-    "active": false,
-    "mode": "Danger",
-    "flag": "RED",
-    "startTime": 1752768318668,
+    "currentSession": "third",
+    "active": true,
+    "mode": "Hazard",
+    "flag": "YELLOW",
+    "startTime": 1752830343351,
     "countdown": 600,
     "laps": {},
     "currentLaps": {}
