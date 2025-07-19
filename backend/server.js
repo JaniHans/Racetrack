@@ -138,8 +138,6 @@ app.get('/race-flags', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/race-flags/index.html'));
 });
 
-
-
 // Socket.IO
 io.on('connection', (socket) => {
   console.log('Client connected');
@@ -358,13 +356,6 @@ io.on('connection', (socket) => {
         driver.currentLap = 1;
         console.log(driver.currentLap);
       }
-      // let fastestLap = null;
-      // let currentLap = 0;
-      //
-      // drivers[session].push({ name, car: assignedCar, fastestLap, currentLap});
-      // console.log(drivers[session]);
-      // io.emit('update:data', { sessions, drivers, cars, fastestLap, currentLap, raceState: global.raceState });
-
       saveState();
 
       const ignoreReceptionist = true;
@@ -427,6 +418,7 @@ io.on('connection', (socket) => {
     global.raceState.mode = 'Danger';
     global.raceState.flag = 'CHEQUERED';
     global.raceState.active = false;
+    global.raceState.startTime = null;
     io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
     io.emit('raceFinished', global.raceState);
     saveState();
@@ -456,8 +448,6 @@ io.on('connection', (socket) => {
     }
   });
 
-
-
 socket.on('fetch:current-session', () => {
   const currentSession = sessions[0] || null;
   //const currentSession = sessions.shift() || null;
@@ -472,6 +462,23 @@ socket.on('session:lockin', ({ session, key }) => {
   socket.on('lap:done', (data) => {
     socket.broadcast.emit('lap:done', data); // Sends to all clients except sender
   });
+  socket.on('request:lap-times', (data) => {
+
+    const session = sessions[0] || null;
+    const sessionDrivers = drivers[global.raceState?.currentSession];
+
+    const bestLapTimes = {};
+    console.log("SESSION DRIVERS " , sessionDrivers)
+    if (sessionDrivers) {
+      sessionDrivers.forEach(driver => {
+
+        bestLapTimes[driver.car] = driver.fastestLap;
+
+      });
+    }
+    console.log('Sending lapTimes: ', bestLapTimes)
+    socket.emit('response:lap-times', { value: bestLapTimes });
+  });
 
   // Lap completed event
   socket.on('lap:completed', ({ car, key, lapTime }) => {
@@ -480,12 +487,9 @@ socket.on('session:lockin', ({ session, key }) => {
     // Initialize race state laps if not exists
     if (!global.raceState.laps) global.raceState.laps = {};
 
-
-
     // Increment lap count
     global.raceState.laps[car] = (global.raceState.laps[car] || 0) + 1;
 
-    
     // Update fastest lap time if lapTime is provided
     if (lapTime && global.raceState.currentSession) {
       const currentSession = global.raceState.currentSession;

@@ -1,6 +1,7 @@
 const socket = io();
 let previousFlag = null;
 
+socket.emit('fetch:data')
 socket.on('raceStarted', (state) => {
     updateFlagScreen(state.flag); // should be 'GREEN' initially
 });
@@ -12,6 +13,11 @@ socket.on('modeChanged', ({ mode, flag }) => {
 socket.on('raceFinished', (state) => {
     updateFlagScreen(state.flag); // should be 'GREEN' initially
 });
+socket.on('update:data', (state) => {
+    console.log(state)
+    updateFlagScreen(state.raceState.flag);
+});
+
 
 function updateFlagScreen(flag) {
 

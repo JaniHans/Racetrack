@@ -2,7 +2,7 @@ const socket = io();
 
 let timerInterval = null;
 
-
+socket.emit('fetch:data')
 const timerContainer = document.getElementById('time');
 
 socket.on('connect', () => {
@@ -23,6 +23,12 @@ socket.on('raceFinished', (state) => {
     // Optionally update UI based on state
     // Reload the timer
     finishRace(state)
+});
+socket.on('update:data', (state) => {
+    console.log(state)
+    let startTime = state.raceState.startTime;
+    let countdown = state.raceState.countdown;
+    startTimer(startTime, countdown)
 });
 
 function startTimer(startTime, countdown) {
@@ -50,6 +56,9 @@ function startTimer(startTime, countdown) {
 }
 
 function finishRace(startTime) {
+    console.log(startTime)
+    console.log(startTime.startTime)
+    console.log("timer interval" + timerInterval)
     if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
