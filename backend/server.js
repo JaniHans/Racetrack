@@ -27,6 +27,9 @@ const isDev = process.env.NODE_ENV === "development";
 let sessions = [];
 let drivers = {};
 
+// Race timer management - track the timeout to prevent multiple timers
+let raceTimeout = null;
+
 // Predefined list of cars
 const cars = ['Car A', 'Car B', 'Car C', 'Car D', 'Car E', 'Car F', 'Car G', 'Car H'];
 
@@ -331,6 +334,13 @@ io.on('connection', (socket) => {
   });
 // safety control , start race
   socket.on('race:start', () => {
+    // Clear any existing race timeout to prevent multiple timers
+    if (raceTimeout) {
+      clearTimeout(raceTimeout);
+      raceTimeout = null;
+      console.log('Cleared existing race timeout');
+    }
+    
     // Move first session to raceState.currentSession
     const startedSession = sessions[0] || null;
     if (startedSession) {
@@ -356,15 +366,17 @@ io.on('connection', (socket) => {
       io.emit('modeChanged', { mode: global.raceState.mode, flag: global.raceState.flag });
       io.emit('update:data', { sessions, drivers, cars, ignoreReceptionist, raceState: global.raceState, currentSession: global.raceState.currentSession });
     }
-    // ADDED TIMEOUT
-    setTimeout(() => {
+    // ADDED TIMEOUT - store reference to clear it later
+    raceTimeout = setTimeout(() => {
       if (global.raceState.active) {
         global.raceState.mode = 'Finish';
         global.raceState.flag = 'CHEQUERED';
         global.raceState.active = false;
         io.emit('raceFinished', global.raceState);
         saveState();
+        console.log('Race automatically finished by timeout');
       }
+      raceTimeout = null; // Clear the reference
 
 
     }, global.raceState.countdown * 1000);
@@ -395,6 +407,14 @@ io.on('connection', (socket) => {
   });
   socket.on('race:finish', () => {
     console.log('FINISH RACE RECEIVED'); //
+    
+    // Clear any existing race timeout since race is manually finished
+    if (raceTimeout) {
+      clearTimeout(raceTimeout);
+      raceTimeout = null;
+      console.log('Cleared race timeout - manual finish');
+    }
+    
     global.raceState.mode = 'Danger';
     global.raceState.flag = 'CHEQUERED';
     global.raceState.active = false;
@@ -404,6 +424,13 @@ io.on('connection', (socket) => {
     saveState();
   });
   socket.on('race:endSession', () => {
+    // Clear any existing race timeout since session is being ended
+    if (raceTimeout) {
+      clearTimeout(raceTimeout);
+      raceTimeout = null;
+      console.log('Cleared race timeout - session ended');
+    }
+    
     const endedSession = global.raceState.currentSession;
     if (endedSession) {
       // Remove from sessions array
