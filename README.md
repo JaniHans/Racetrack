@@ -7,8 +7,10 @@ This project provides real-time race management interfaces (admin and public) us
 
 
 2.▶️ Running the App
+<br></br>
     1. Start the Backend Server in your terminal  
        ```npm start``` - 600 seconds race time OR  ```npm run dev``` - for 60 seconds race time
+<br></br>
     2. Before you open all the interfaces, please paste the following to your state.json(<span style="color: red">backend folder</span>) file
        ```
        {
@@ -23,8 +25,8 @@ This project provides real-time race management interfaces (admin and public) us
        "laps": {},
        "currentSession": null
        }
-       } 
-
+       }
+<br></br>
     3. Click on the link to access the main menu
 
 Concatenate the below found routes to your ngrok website or use the main menu interface
