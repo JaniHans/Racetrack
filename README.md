@@ -30,7 +30,7 @@ This project provides real-time race management interfaces (admin and public) us
 <br></br>
     3. Click on the link to access the main menu
 
-Concatenate the below found routes to your ngrok website or use the main menu interface
+Main menu interface
 
 | Interface        | Route              |
 | ---------------- | ------------------ |
