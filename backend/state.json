@@ -6,7 +6,7 @@
     "active": false,
     "mode": "Danger",
     "flag": "RED",
-    "startTime": null,
+    "startTime": 1753438203513,
     "countdown": 600,
     "laps": {},
     "currentLaps": {}

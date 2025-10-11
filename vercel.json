@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/front-desk",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/race-control", 
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/lap-line-tracker",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/leader-board",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/next-race",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/race-countdown",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/race-flags",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "backend/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

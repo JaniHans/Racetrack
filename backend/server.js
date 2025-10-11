@@ -490,9 +490,7 @@ socket.on('session:lockin', ({ session, key }) => {
 });
 // Start
 httpServer.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}/index.html`);
-  console.log(`Server accessible from network at http://192.168.0.28:${PORT}/index.html`);
-  console.log(`Mobile devices can access at: http://192.168.0.28:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
   console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
   console.log('Race-Control key:', process.env.KEY_SAFETY);
   console.log('Lap-Line-Tracker key:', process.env.KEY_OBSERVER);
