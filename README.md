@@ -25,8 +25,8 @@ This project provides real-time race management interfaces (admin and public) us
        "laps": {},
        "currentSession": null
        }
-       }
-```
+       }```
+
 <br></br>
     3. Click on the link to access the main menu
 
