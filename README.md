@@ -5,12 +5,8 @@ This project provides real-time race management interfaces (admin and public) us
 1. Install Dependencies
    ```npm install```
 
-2. Install & Authenticate Ngrok
-   1. Download Ngrok: https://ngrok.com/download
-   2. Run this command to authenticate your Ngrok client in the Ngrok tunnel (terminal):
-   ```ngrok config add-authtoken YOUR_AUTH_TOKEN```
-<br></br>
-3. ▶️ Running the App
+
+2.▶️ Running the App
    1. Start the Backend Server in your terminal  
    ```npm start``` - 600 seconds race time OR  ```npm run dev``` - for 60 seconds race time   
    2. Before you open all the interfaces, please paste the following to your state.json(<span style="color: red">backend folder</span>) file
