@@ -481,7 +481,7 @@ socket.on('session:lockin', ({ session, key }) => {
 // Start
 httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
-  console.log('Race-Control key:', process.env.KEY_SAFETY);
-  console.log('Lap-Line-Tracker key:', process.env.KEY_OBSERVER);
+  // console.log('Receptionist key:', process.env.KEY_RECEPTIONIST);
+  // console.log('Race-Control key:', process.env.KEY_SAFETY);
+  // console.log('Lap-Line-Tracker key:', process.env.KEY_OBSERVER);
 });
