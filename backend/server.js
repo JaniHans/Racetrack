@@ -145,59 +145,22 @@ io.on('connection', (socket) => {
   // Send initial data to the client
   socket.emit('update:data', { sessions, drivers, cars, raceState: global.raceState });
 
-  // Helper function to check receptionist key
-  function checkReceptionistKey(key) {
-    return key && key === RECEPTIONIST_KEY;
-  }
-  // Helper function to check safety key
-  function checkSafetyKey(key) {
-    return key && key === SAFETY_OFFICIAL_KEY;
-  }
-  // Helper function to check observer key
-  function checkObserverKey(key) {
-    return key && key === process.env.KEY_OBSERVER;
-  }
+  // Key checking functions removed for easier deployment
 
-  // Handle receptionist authentication
+  // Authentication removed for easier deployment
   socket.on('auth:receptionist', ({ key }) => {
-    const isValid = checkReceptionistKey(key);
-    if (isValid) {
-      socket.emit('auth:receptionist:result', true);
-    } else {
-      // Add 500ms delay for incorrect key
-      setTimeout(() => {
-        socket.emit('auth:receptionist:result', false);
-      }, 500);
-    }
+    socket.emit('auth:receptionist:result', true);
   });
-// Handle safety official authentication
   socket.on('auth:race-control', ({ key }) => {
-    const isValid = checkSafetyKey(key);
-    if (isValid) {
-      socket.emit('auth:race-control:result', true);
-    } else {
-      // Add 500ms delay for incorrect key
-      setTimeout(() => {
-        socket.emit('auth:race-control:result', false);
-      }, 500);
-    }
+    socket.emit('auth:race-control:result', true);
   });
-// Handle lap line observer authentication
   socket.on('auth:observer', ({ key }) => {
-    const isValid = checkObserverKey(key);
-    if (isValid) {
-      socket.emit('auth:observer:result', true);
-    } else {
-      // Add 500ms delay for incorrect key
-      setTimeout(() => {
-        socket.emit('auth:observer:result', false);
-      }, 500);
-    }
+    socket.emit('auth:observer:result', true);
   });
 
   // Handle adding a new session
   socket.on('session:add', ({ newSessionName, key,  }) => {
-    if (!checkReceptionistKey(key)) return;
+    // Key check removed for easier deployment
 
     if (!sessions.includes(newSessionName)) {
       sessions.push(newSessionName);
@@ -212,7 +175,7 @@ io.on('connection', (socket) => {
 
   // Handle adding a new driver
   socket.on('driver:add', ({ session, name, car, key }) => {
-    if (!checkReceptionistKey(key)) return;
+    // Key check removed for easier deployment
 
     if (sessions.includes(session)) {
       if (drivers[session].length >= cars.length) {
@@ -250,7 +213,7 @@ io.on('connection', (socket) => {
 
   // Handle removing a session
   socket.on('session:remove', ({ session, key }) => {
-    if (!checkReceptionistKey(key)) return;
+    // Key check removed for easier deployment
 
     if (sessions.includes(session)) {
       sessions = sessions.filter((s) => s !== session);
@@ -265,7 +228,7 @@ io.on('connection', (socket) => {
 
   // Handle removing a driver
   socket.on('driver:remove', ({ session, name, key }) => {
-    if (!checkReceptionistKey(key)) return;
+    // Key check removed for easier deployment
 
     const safeName = typeof name === 'string' ? name.trim() : String(name).trim();
 
@@ -281,7 +244,7 @@ io.on('connection', (socket) => {
 
   // Handle editing a driver
   socket.on('driver:edit', ({ session, oldName, newName, key }) => {
-    if (!checkReceptionistKey(key)) return;
+    // Key check removed for easier deployment
 
     const safeOldName = typeof oldName === 'string' ? oldName.trim() : String(oldName).trim();
     const safeNewName = typeof newName === 'string' ? newName.trim() : String(newName).trim();
@@ -304,7 +267,7 @@ io.on('connection', (socket) => {
 
   // Handle editing a driver's car
   socket.on('driver:editCar', ({ session, name, car, key }) => {
-    if (!checkReceptionistKey(key)) return;
+    // Key check removed for easier deployment
 
     if (!sessions.includes(session)) {
       console.log(`Session not found: ${session}`);
@@ -454,7 +417,7 @@ socket.on('fetch:current-session', () => {
   io.emit('receive:current-session', currentSession);
 });
 socket.on('session:lockin', ({ session, key }) => {
-  if (!checkReceptionistKey(key)) return;
+  // Key check removed for easier deployment
   io.emit('session:lockedin', { session });
   console.log(`Session locked in: ${session}`);
 });
@@ -482,7 +445,7 @@ socket.on('session:lockin', ({ session, key }) => {
 
   // Lap completed event
   socket.on('lap:completed', ({ car, key, lapTime }) => {
-    if (key !== process.env.KEY_OBSERVER) return;
+    // Key check removed for easier deployment
     
     // Initialize race state laps if not exists
     if (!global.raceState.laps) global.raceState.laps = {};

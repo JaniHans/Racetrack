@@ -2,13 +2,12 @@
   "sessions": [],
   "drivers": {},
   "raceState": {
-    "currentSession": null,
     "active": false,
-    "mode": "Danger",
-    "flag": "RED",
-    "startTime": 1753438203513,
-    "countdown": 600,
+    "mode": null,
+    "flag": null,
+    "startTime": 1752328206371,
+    "countdown": 60,
     "laps": {},
-    "currentLaps": {}
+    "currentSession": null
   }
 }

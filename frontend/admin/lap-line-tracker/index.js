@@ -2,7 +2,8 @@ const socket = io();
 
 let cars = [];
 let lapCounts = {};
-let observerKey = null;
+// Key removed for easier deployment
+let observerKey = 'no-key-required';
 let raceActive = false;
 let lapTimestamps = {}; // car -> [timestamps]
 let bestLapTimes = {};  // car -> ms
@@ -10,32 +11,9 @@ let raceStartTime = null;
 
 socket.emit('best:LapTimes', {bestLapTimes});
 
+// Modal removed for easier deployment
 window.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('keyModal');
-  const input = document.getElementById('observerKeyInput');
-  const submitKeyButton = document.getElementById('submitKeyBtn');
-  const error = document.getElementById('keyError');
   socket.emit('fetch:data');
-
-  function tryKey() {
-    const key = input.value.trim();
-    socket.emit('auth:observer', { key });
-  }
-
-  submitKeyButton.onclick = tryKey;
-  input.onkeydown = (e) => { if (e.key === 'Enter') tryKey(); };
-
-  socket.on('auth:observer:result', (ok) => {
-    if (ok) {
-      observerKey = input.value.trim();
-      modal.style.display = 'none';
-      error.style.display = 'none';
-      socket.emit('fetch:data');
-    } else {
-      error.style.display = 'block';
-      input.value = '';
-    }
-  });
 });
 
 // Listen for car data

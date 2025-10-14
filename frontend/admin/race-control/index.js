@@ -163,7 +163,8 @@ function updateDriverTable() {
 // Call updateDriverTable on page load in case data arrives late
 document.addEventListener('DOMContentLoaded', updateDriverTable);
 
-let raceControlKey = null;
+// Key removed for easier deployment
+let raceControlKey = 'no-key-required';
 
 
 function startRace() {
@@ -227,44 +228,21 @@ socket.on('connect', () => {
     console.log('Connected to server');
 });
 
-// Show modal and handle key entry
+// Modal removed for easier deployment
 window.addEventListener('DOMContentLoaded', () => {
     console.log('------------------LOADING PAGE');
     console.log(raceActive);
-    const modal = document.getElementById('keyModal');
-    const input = document.getElementById('raceControlKeyInput');
-    const btn = document.getElementById('submitKeyBtn');
-    const error = document.getElementById('keyError');
 
-    function tryKey() {
-        const key = input.value.trim();
-        socket.emit('auth:race-control', { key });
-    }
+    // Initialize buttons immediately
+    start.onclick = startRace;
+    safe.onclick = safeRace;
+    stop.onclick = stopRace;
+    hazard.onclick = reportHazard;
+    finish.onclick = finishRace;
+    end.onclick = endSession;
+    logoutBtn.onclick = logout;
 
-    btn.onclick = tryKey;
-    input.onkeydown = (e) => { if (e.key === 'Enter') tryKey(); };
-
-    socket.on('auth:race-control:result', (ok) => {
-        if (ok) {
-            raceControlKey = input.value.trim();
-            modal.style.display = 'none';
-            error.style.display = 'none';
-
-            start.onclick = startRace;
-            safe.onclick = safeRace;
-            stop.onclick = stopRace;
-            hazard.onclick = reportHazard;
-            finish.onclick = finishRace;
-            end.onclick = endSession;
-            logoutBtn.onclick = logout;
-
-            updateDriverTable();
-
-        } else {
-            error.style.display = 'block';
-            input.value = '';
-        }
-    });
+    updateDriverTable();
 
     // Add logout button handler
     const logoutBtn = document.getElementById('logoutBtn');
@@ -273,16 +251,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Add this function to show the key modal and clear the key
+// Logout function simplified for easier deployment
 function logoutSafety() {
-    raceControlKey = null;
-    // Show the modal again
-    const modal = document.getElementById('keyModal');
-    const input = document.getElementById('raceControlKeyInput');
-    const error = document.getElementById('keyError');
-    modal.style.display = '';
-    error.style.display = 'none';
-    input.value = '';
+    raceControlKey = 'no-key-required';
+    // Reload page to reset state
+    location.reload();
 }
 
 socket.on('session:lockedin', ({ session }) => {

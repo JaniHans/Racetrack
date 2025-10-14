@@ -5,8 +5,8 @@ let drivers = {};
 let cars = [];
 let raceActive = null;
 
-// Add at the top
-let receptionistKey = null;
+// Key removed for easier deployment
+let receptionistKey = 'no-key-required';
 
 socket.emit('fetch:data');
 
@@ -345,32 +345,8 @@ socket.on('error:driverExists', ({ session, message }) => {
   alert(`Driver already exists in session "${session}": ${message}`);
 });
 
-// Show modal and handle key entry
+// Modal removed for easier deployment
 window.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('keyModal');
-  const input = document.getElementById('receptionistKeyInput');
-  const btn = document.getElementById('submitKeyBtn');
-  const error = document.getElementById('keyError');
-
-  function tryKey() {
-    const key = input.value.trim();
-    socket.emit('auth:receptionist', { key });
-  }
-
-  btn.onclick = tryKey;
-  input.onkeydown = (e) => { if (e.key === 'Enter') tryKey(); };
-
-  socket.on('auth:receptionist:result', (ok) => {
-    if (ok) {
-      receptionistKey = input.value.trim();
-      modal.style.display = 'none';
-      error.style.display = 'none'; // Hide error on success
-    } else {
-      error.style.display = 'block'; // <-- This will show the error!
-      input.value = '';
-    }
-  });
-
   // Add logout button handler
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
@@ -378,14 +354,9 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Add this function to show the key modal and clear the key
+// Logout function simplified for easier deployment
 function logoutReceptionist() {
-  receptionistKey = null;
-  // Show the modal again
-  const modal = document.getElementById('keyModal');
-  const input = document.getElementById('receptionistKeyInput');
-  const error = document.getElementById('keyError');
-  modal.style.display = '';
-  error.style.display = 'none';
-  input.value = '';
+  receptionistKey = 'no-key-required';
+  // Reload page to reset state
+  location.reload();
 }
